@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
+
+project(Glad)#таргет
+
+add_library(glad STATIC include/glad/glad.h src/glad.c) #происходит компиляция и линкова glad.c к библиотеке glad
+# без glad.h так как он не компилируется(можно было вообще его не указывать, но для явного понимания стоит)
+
+
+target_include_directories(glad PUBLIC include/) # команда сообщает компилятору где искать glad.h когда проект
+#включит их через include. PUBLIC нужен для того чтобы другие проекты которые подключались могли видеть хедер.
