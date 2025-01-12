@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include<iostream>
 #include<string>
+#include"Renderer/ShaderProgram.h" // почему именно .h а не .cpp?
 
 
 
@@ -93,28 +94,15 @@ int main(void)
 
 	glClearColor(0,1,0,1);
 
-    //обозначаем идентификатор(1) и приравниваем к функции которая создает шейдер(2)
-    /*typedef unsigned int GLuint;*/ 
-    GLuint vs = glCreateShader(GL_VERTEX_SHADER);//1
-    glShaderSource(vs, 1, &vertex_shader, nullptr);//2,передаем исходный код(vertex_shader), id, количество строк, ссылка на массив строк, и длина строк(nullptr тк нет массива строк, то есть обозначает что на вход идет массив с одной строкой и 0-ым терминальным символом)
-    glCompileShader(vs);//компилирование кода шейдера(id shader`a)
+    std::string vertexShader(vertex_shader);
+    std::string fragmentShader(fragment_shader);
+    Renderer::ShaderProgram shaderProgram(vertexShader, fragmentShader);
 
-    //все то же самое только fragment_shader
-    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fs, 1, &fragment_shader, nullptr);
-    glCompileShader(fs);
-
-    
-    //после компиляции нам нужно слинковать шейдеры,то есть объединить в одну шейдерную программу. при линкове идет объединение выходных значений вертех шейд с вход знач фрагмент шейд.,
-    //так что, если имена и тип не совпадают - произойдет ошибка линковки.
-    GLuint shader_program = glCreateProgram(); // также возвращает id
-    glAttachShader(shader_program, vs);//аттачим вертексный — функция, которая привязывает шейдер к объекту программы.
-    glAttachShader(shader_program, fs);// аттачим фрагмент — функция, которая привязывает шейдер к объекту программы.
-    glLinkProgram(shader_program);// линковка в одну shared_program
-      
-    //удаляем объекты вертекс и фрагмен шейдеры 
-    glDeleteShader(vs);
-    glDeleteShader(fs);
+    if (!shaderProgram.isCompiled())
+    {
+        std::cerr << "Can`t create shader program" << std::endl;
+        return -1;
+    }
 
     //далее нам нужно передать необходимую информацию видеокарте(кординаты и цвета)
     // В контексте OpenGL буфер — это область памяти, которая используется для хранения данных. Например, буфер может хранить информацию о вершинах (вертексах), цветах, текстурах или других данных, которые могут быть использованы при рендеринге.
@@ -155,7 +143,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
         
         //чтобы нарисовать подключаем шейдеры которые хотим использовать для рисования
-        glUseProgram(shader_program);
+        shaderProgram.use();
         glBindVertexArray(vao);// подключаем vao которые хотим отрисовать
         glDrawArrays(GL_TRIANGLES,0,3);// вид примитива, индекс с которого рисуем и количество вертексов
 
