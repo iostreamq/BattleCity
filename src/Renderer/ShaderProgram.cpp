@@ -6,14 +6,14 @@ namespace Renderer {
 
 	ShaderProgram::ShaderProgram(const std::string& vertexShader, const std::string& fragmentShader) 
 	{
-		GLuint vertexShaderID; // указатель здесь должен быть и передаваться по ссылке же??
+		GLuint vertexShaderID = 0; // указатель здесь должен быть и передаваться по ссылке же??
 		if (!createShader(vertexShader, GL_VERTEX_SHADER, vertexShaderID))
 		{
 			std::cerr << "VERTEX SHADER compile time error" << std::endl;
 			return;
 		}
 
-		GLuint fragmentShaderID;
+		GLuint fragmentShaderID = 0;
 		if (!createShader(fragmentShader, GL_FRAGMENT_SHADER, fragmentShaderID))
 		{
 			std::cerr << "FRAGMENT SHADER compile time error" << std::endl;
@@ -47,7 +47,7 @@ namespace Renderer {
 
 	ShaderProgram& ShaderProgram::operator=(ShaderProgram&& shaderProgram) noexcept
 	{
-		if (this == &shaderProgram) return;
+		if (this == &shaderProgram) return *this;
 
 		glDeleteProgram(m_ID);
 
@@ -67,7 +67,7 @@ namespace Renderer {
 		shaderProgram.m_isCompiled = false;
 	}
 
-	bool ShaderProgram::createShader(const std::string& source, const GLenum shaderType, GLuint shaderID)// вроде надо передавать по ссылке  а не по значению shader id?? 
+	bool ShaderProgram::createShader(const std::string& source, const GLenum shaderType, GLuint& shaderID)
 	{
 
 		shaderID = glCreateShader(shaderType);

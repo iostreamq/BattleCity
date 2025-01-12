@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 set(PROJECT_NAME BattleCity)
 project(${PROJECT_NAME})
@@ -6,8 +6,8 @@ project(${PROJECT_NAME})
 add_executable(${PROJECT_NAME} 
 src/main.cpp
 src/Renderer/ShaderProgram.cpp
-src/Renderer/ShaderProgram.h#хедер все равно не линкуется же? 
-src/Renderer/moveLearning.cpp
+src/Renderer/ShaderProgram.h
+
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

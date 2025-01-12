@@ -18,7 +18,7 @@ namespace Renderer{ // для чего namespace?
 		ShaderProgram(ShaderProgram&&) noexcept;
 
 	private:
-		bool createShader(const std::string& source, const GLenum shaderType, GLuint shaderID); // shaderID перадем m_ID и по референсу записываем значение id... , GLenum?? 
+		bool createShader(const std::string& source, const GLenum shaderType, GLuint& shaderID); // shaderID перадем m_ID и по референсу записываем значение id... , GLenum?? 
 		bool m_isCompiled = false; // проверка линковки
 		GLuint m_ID = 0; // ID SHARED PROGRAM
 	};
