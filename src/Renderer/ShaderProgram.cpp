@@ -91,7 +91,7 @@ namespace Renderer {
 	ShaderProgram::~ShaderProgram() {
 		glDeleteProgram(m_ID);
 	}
-	// попробовать поместить mid в gluseprogram
+
 	 void ShaderProgram::use() const  {
 		 glUseProgram(m_ID);
 	  }
