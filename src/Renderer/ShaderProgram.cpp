@@ -6,7 +6,7 @@ namespace Renderer {
 
 	ShaderProgram::ShaderProgram(const std::string& vertexShader, const std::string& fragmentShader) 
 	{
-		GLuint vertexShaderID = 0; // указатель здесь должен быть и передаваться по ссылке же??
+		GLuint vertexShaderID = 0; 
 		if (!createShader(vertexShader, GL_VERTEX_SHADER, vertexShaderID))
 		{
 			std::cerr << "VERTEX SHADER compile time error" << std::endl;
@@ -31,7 +31,7 @@ namespace Renderer {
 		if (!success) 
 		{
 			GLchar infoLog[1024]; 
-			glGetShaderInfoLog(m_ID, sizeof(infoLog), nullptr, infoLog);
+			glGetProgramInfoLog(m_ID, sizeof(infoLog), nullptr, infoLog);
 			std::cerr << "ERROR::SHADER: Link-time error:\n" << infoLog << std::endl; 
 			//?return;
 		}
