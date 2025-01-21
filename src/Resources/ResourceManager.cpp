@@ -2,7 +2,9 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_ONLY_PNG //что ето 
+#include "stb_image.h"
 
 ResourceManager::ResourceManager(const std::string& executablePath)
 {
@@ -35,6 +37,28 @@ std::shared_ptr<Renderer::ShaderProgram> ResourceManager::loadShaders(const std:
 
       return nullptr;
 }
+
+std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTexture(const std::string& textureName, const std::string& texturePath)
+{
+	int channels = 0;
+	int width = 0;
+	int height = 0;
+	stbi_set_flip_vertically_on_load(true); // нужный порядок байтов
+	unsigned char* pixels/*почему char*/ = stbi_load(std::string/*почему явно преобразовываем в стринег если m_Path и так стринг??*/(m_Path + texturePath).c_str(), &width, &height, &channels, 0);// 0- сколько каналов мы собираемся получить
+	if (!pixels) {
+		std::cerr << "Can`t load image: " << texturePath << std::endl;
+		return nullptr;
+	}
+	std::shared_ptr<Renderer::Texture2D>& DefaultTexture = m_TexturesMap.emplace(textureName,std::make_shared<Renderer::Texture2D>(width, height, pixels, 
+		                                                                         channels, GL_NEAREST, GL_CLAMP_TO_EDGE)).first->second;
+	if (!DefaultTexture) {
+		std::cerr << "Problem with shared_ptr! " << DefaultTexture << std::endl;
+		return nullptr;
+	}
+
+	stbi_image_free(pixels);
+	return DefaultTexture;
+	}
 
 std::string ResourceManager::getFileString(const std::string& AdditionalPath)
 {

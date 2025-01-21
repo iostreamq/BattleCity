@@ -10,6 +10,7 @@ namespace Renderer{ // для чего namespace?
 		~ShaderProgram();
 		bool isCompiled() const { return m_isCompiled; }
 		void use() const; //влючении наших шейдеров
+		void setInt(const std::string& name, const GLint value);
 
 		ShaderProgram() = delete; // запрещаем конструктор без параметров чтобы не создал шейдер без сурс кода
 		ShaderProgram(ShaderProgram&) = delete; //запрещаем конструировать(копи констр) одну шейдернуб программу из другой шейдерной программы(потом в деструкторе проблема из 2 шейдеров с одним m_ID)

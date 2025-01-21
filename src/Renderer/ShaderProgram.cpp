@@ -95,4 +95,8 @@ namespace Renderer {
 	 void ShaderProgram::use() const  {
 		 glUseProgram(m_ID);
 	  }
+	 void ShaderProgram::setInt(const std::string& name, const GLint value)
+	 {
+		 glUniform1i(glGetUniformLocation(m_ID,name.c_str()), value);
+	 }
 }

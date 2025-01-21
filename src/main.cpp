@@ -4,6 +4,7 @@
 #include<string>
 #include"Renderer/ShaderProgram.h" 
 #include"Resources/ResourceManager.h" 
+#include"Renderer/Texture2D.h" 
 
 
 
@@ -13,10 +14,18 @@ GLfloat point[] = { //typedef float GLfloat;
    -0.5f, -0.5f, 0.0f
 };
 
+// попробовать заменить на textures
 GLfloat colors[] = {
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 1.0f
+};
+
+
+GLfloat textures[] = { 
+    0.5f, 1.0f, 
+    1.0f, 0.0f, 
+    0.0f, 0.0f 
 };
 
 
@@ -83,6 +92,7 @@ int main(int argc, char** argv)
             std::cerr << "Can`t create shader progam" << std::endl;
             return -1;
         }
+        auto tex = ResourceManager.loadTexture("DefaultTexture", "/res/textures/map_16x16.png");
         
         //далее нам нужно передать необходимую информацию видеокарте(кординаты и цвета)
         // В контексте OpenGL буфер — это область памяти, которая используется для хранения данных. Например, буфер может хранить информацию о вершинах (вертексах), цветах, текстурах или других данных, которые могут быть использованы при рендеринге.
@@ -97,7 +107,11 @@ int main(int argc, char** argv)
         glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
         //пока видеокарта не знает что делать с этими данными и чтобы связять их с входными атрибутами шейдера нам нужно vertex_array_obj
-
+         
+        GLuint texCood_vbo = 0;// тоже самое как и с кордами
+        glGenBuffers(1, &texCood_vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, texCood_vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(textures), textures, GL_STATIC_DRAW);
 
         GLuint vao = 0; // id
         glGenVertexArrays(1, &vao);//(сколько эррев надо сгенить)
@@ -113,9 +127,15 @@ int main(int argc, char** argv)
         glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+        glEnableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER, texCood_vbo);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
         glfwSetWindowSizeCallback(pWindow, glfwWindowSizeCallback); // callback для изменения разрешения 
         glfwSetKeyCallback(pWindow, glfwKeyCallback); // callback для escape
-
+        
+        pShaderProgram->use();
+        pShaderProgram->setInt("tex", 0);// после активизации шейдера мы записываем в переменную tex нашу текстуру из 0 слотаы
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(pWindow))//если стоит флаг !true(который мы поставили в keyCallback), то выходим из цикла и завершаем работу
         {
@@ -123,10 +143,11 @@ int main(int argc, char** argv)
             glClear(GL_COLOR_BUFFER_BIT);
 
             //чтобы нарисовать подключаем шейдеры которые хотим использовать для рисования
-            pShaderProgram->use();
+            //pShaderProgram->use();
             glBindVertexArray(vao);// подключаем vao которые хотим отрисовать
+            tex->bind();
             glDrawArrays(GL_TRIANGLES, 0, 3);// вид примитива, индекс с которого рисуем и количество вертексов
-
+           
             /* Swap front and back buffers */
             glfwSwapBuffers(pWindow);
 
