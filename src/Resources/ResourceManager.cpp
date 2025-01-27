@@ -5,6 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_ONLY_PNG //что ето 
 #include "stb_image.h"
+//#include "external/glm/vec2.hpp"
 
 ResourceManager::ResourceManager(const std::string& executablePath)
 {
@@ -38,6 +39,16 @@ std::shared_ptr<Renderer::ShaderProgram> ResourceManager::loadShaders(const std:
       return nullptr;
 }
 
+std::shared_ptr<Renderer::ShaderProgram> ResourceManager::getShaderProgram(const std::string& shaderName)
+{
+	ShaderProgramsMap::const_iterator it = m_shaderPrograms.find(shaderName);
+	if (it != m_shaderPrograms.end())
+		return it->second;
+
+	std::cerr << "Can`t find shader" << std::endl;
+	return nullptr;
+}
+
 std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTexture(const std::string& textureName, const std::string& texturePath)
 {
 	int channels = 0;
@@ -59,6 +70,43 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTexture(const std::str
 	stbi_image_free(pixels);
 	return DefaultTexture;
 	}
+
+std::shared_ptr<Renderer::Texture2D> ResourceManager::getTexture(const std::string& textureName)
+{
+	TexturesMap::const_iterator it = m_TexturesMap.find(textureName);
+	if (it != m_TexturesMap.end())
+		return it->second;
+
+	std::cerr << "Can`t find texture" << std::endl;
+	return nullptr;
+}
+
+std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprites(const std::string& spriteName, 
+															   const std::string& textureName,
+															   const std::string& shaderName,
+															   const unsigned int spriteWidth, 
+															   const unsigned int spriteHeight)
+{
+	auto pTexture = getTexture(textureName);
+	if (!pTexture) {
+		std::cerr << "Can`t find texture" << textureName <<"for the sprite" << spriteName << std::endl;
+		return nullptr;
+	}
+
+	auto pShader = getShaderProgram(shaderName);
+
+	if (!pTexture) {
+		std::cerr << "Can`t find shader" << shaderName << "for the sprite" << spriteName << std::endl;
+		return nullptr;
+	}
+
+	std::shared_ptr<Renderer::Sprite>& DefaultSprite = m_SpritesMap.emplace(spriteName, 
+																	        std::make_shared<Renderer::Sprite>(pTexture, 
+										                                    pShader,
+																			glm::vec2(0.f, 0.f),
+																		    glm::vec2(spriteWidth, spriteHeight))).first->second;
+	return DefaultSprite; 
+}
 
 std::string ResourceManager::getFileString(const std::string& AdditionalPath)
 {

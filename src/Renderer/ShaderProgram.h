@@ -1,6 +1,7 @@
 #pragma once 
 #include<string>
 #include<glad/glad.h> // voprsik pochemu glad
+#include"external/glm/mat4x4.hpp"
 
 namespace Renderer{ // для чего namespace?
 	
@@ -11,6 +12,7 @@ namespace Renderer{ // для чего namespace?
 		bool isCompiled() const { return m_isCompiled; }
 		void use() const; //влючении наших шейдеров
 		void setInt(const std::string& name, const GLint value);
+		void setMatrix4(const std::string& name, const glm::mat4& matrix); // а если передам единичную
 
 		ShaderProgram() = delete; // запрещаем конструктор без параметров чтобы не создал шейдер без сурс кода
 		ShaderProgram(ShaderProgram&) = delete; //запрещаем конструировать(копи констр) одну шейдернуб программу из другой шейдерной программы(потом в деструкторе проблема из 2 шейдеров с одним m_ID)
