@@ -5,7 +5,7 @@
 #include "../Renderer/ShaderProgram.h" 
 #include "../Renderer/Texture2D.h" 
 #include "../Renderer/Sprite.h"
-
+#include <vector>
 class ResourceManager {
 
 public:
@@ -20,10 +20,16 @@ public:
 	std::shared_ptr<Renderer::Texture2D> loadTexture(const std::string& textureName, const std::string& texturePath); 
 	std::shared_ptr<Renderer::Texture2D> getTexture(const std::string& textureName); 
 	std::shared_ptr<Renderer::Sprite> loadSprites(const std::string& spriteName, 
-		                                         const std::string& textureName,
-												 const std::string& shaderName,
-		                                         const unsigned int spriteWidth, // uns int check
-		                                         const unsigned int spriteHeight); 
+		                                          const std::string& textureName,
+												  const std::string& shaderName,
+		                                          const unsigned int spriteWidth, 
+		                                          const unsigned int spriteHeight,
+												  std::string&& subTextureName = "DEFAULT");
+	std::shared_ptr<Renderer::Texture2D> loadTextureAtlas(std::string&& textureName,
+														  std::string&& texturePath,
+														  std::vector<std::string> vecNamesOfSubTex,
+														  const unsigned int subTextureWidth,
+														  const unsigned int subTextureHeight);
 private:
 	std::string getFileString(const std::string& AdditionalPath);
 	std::string m_Path;

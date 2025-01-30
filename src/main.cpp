@@ -19,9 +19,9 @@ GLfloat point[] = { //typedef float GLfloat;
 
 // попробовать заменить на textures
 GLfloat colors[] = {
-    1.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 1.0f
+    1.0f, 0.1f, 0.0f,
+    0.0f, 1.2f, 0.0f,
+    0.0f, 0.1f, 1.0f
 };
 
 
@@ -104,7 +104,11 @@ int main(int argc, char** argv)
         }
 
         auto tex = ResourceManager.loadTexture("DefaultTexture", "/res/textures/map_16x16.png");
-        auto pSprite = ResourceManager.loadSprites("DefaultSprite", "DefaultTexture", "SpriteShaderProgram", 50, 100);
+
+        std::vector<std::string> subTexturesNames = {"block", "topBlock", "BottomBlock", "leftBlock", "rightBlock", "topLeftBlock","topRightBlock","bottomLeftBlock",
+        "bottomRightBlock","beton"};
+        auto pTextureAtas = ResourceManager.loadTextureAtlas("DefaultTextureAtlas", "/res/textures/map_16x16.png", std::move(subTexturesNames), 16, 16);
+        auto pSprite = ResourceManager.loadSprites("DefaultSprite", "DefaultTextureAtlas", "SpriteShaderProgram", 100, 100,"beton");
         pSprite->setPosition(glm::vec2(300, 100));
 
         //далее нам нужно передать необходимую информацию видеокарте(кординаты и цвета)
@@ -163,6 +167,7 @@ int main(int argc, char** argv)
         pSpriteShaderProgram->use();
         pSpriteShaderProgram->setInt("tex", 0);
         pSpriteShaderProgram->setMatrix4("projectionMatrix", projectionMatrix);
+        pShaderProgram->setMatrix4("modelMatrix", modelMatrix_1);
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(pWindow))//если стоит флаг !true(который мы поставили в keyCallback), то выходим из цикла и завершаем работу
@@ -175,12 +180,14 @@ int main(int argc, char** argv)
             glBindVertexArray(vao);// подключаем vao которые хотим отрисовать
             tex->bind();
 
+            pShaderProgram->use();
             pShaderProgram->setMatrix4("modelMatrix", modelMatrix_1);
             glDrawArrays(GL_TRIANGLES, 0, 3);// вид примитива, индекс с которого рисуем и количество вертексов
 
             pShaderProgram->setMatrix4("modelMatrix", modelMatrix_2);
             glDrawArrays(GL_TRIANGLES, 0, 3);//
 
+            
             pSprite->Render();
 
             /* Swap front and back buffers */

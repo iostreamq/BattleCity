@@ -85,27 +85,63 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprites(const std::string
 															   const std::string& textureName,
 															   const std::string& shaderName,
 															   const unsigned int spriteWidth, 
-															   const unsigned int spriteHeight)
+															   const unsigned int spriteHeight,
+															   std::string&& subTextureName)
 {
-	auto pTexture = getTexture(textureName);
+	std::shared_ptr<Renderer::Texture2D> pTexture = getTexture(textureName);
 	if (!pTexture) {
 		std::cerr << "Can`t find texture" << textureName <<"for the sprite" << spriteName << std::endl;
 		return nullptr;
 	}
 
-	auto pShader = getShaderProgram(shaderName);
+	std::shared_ptr<Renderer::ShaderProgram> pShader = getShaderProgram(shaderName);
 
-	if (!pTexture) {
+	if (!pShader) {
 		std::cerr << "Can`t find shader" << shaderName << "for the sprite" << spriteName << std::endl;
 		return nullptr;
 	}
 
 	std::shared_ptr<Renderer::Sprite>& DefaultSprite = m_SpritesMap.emplace(spriteName, 
 																	        std::make_shared<Renderer::Sprite>(pTexture, 
-										                                    pShader,
+																			std::move(subTextureName),
+																			pShader,																			
 																			glm::vec2(0.f, 0.f),
 																		    glm::vec2(spriteWidth, spriteHeight))).first->second;
 	return DefaultSprite; 
+}
+
+
+std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(std::string&& textureName,
+																	  std::string&& texturePath, 
+																	  std::vector<std::string> vecNamesOfSubTex,
+																	  const unsigned int subTextureWidth, 
+																	  const unsigned int subTextureHeight)
+{
+	auto pTexture = loadTexture(std::move(textureName), std::move(texturePath));
+	if (pTexture) 
+	{
+		 unsigned int textureWidth = pTexture->getWidth();
+		 unsigned int textureHeight = pTexture->getHeight();
+		 unsigned int currentSubTextureOffsetX = 0;
+		 unsigned int currentSubTextureOffsetY = textureHeight;
+
+		 for (auto&& currentSubTextureName : vecNamesOfSubTex) 
+		 {
+			 glm::vec2 leftBottomUV(static_cast<float>(currentSubTextureOffsetX) / textureWidth, static_cast<float>(currentSubTextureOffsetY - subTextureHeight) / textureHeight); // переводим в нормированные коорды(ну и все равно нам потом накладывать на объект который уже в clip space так что по-любому нормированные)
+			 glm::vec2 rightTopUV(static_cast<float>(currentSubTextureOffsetX + subTextureWidth) / textureWidth, static_cast<float>(currentSubTextureOffsetY) / textureHeight); 
+			 pTexture->addSubTexture(std::move(currentSubTextureName), leftBottomUV, rightTopUV);
+
+			 currentSubTextureOffsetX += subTextureWidth;	
+			 if (currentSubTextureOffsetX >= textureWidth) {
+				 
+				 currentSubTextureOffsetX = 0;
+				 currentSubTextureOffsetY -= subTextureHeight;
+			 }
+
+		 }
+
+	}
+	return pTexture;
 }
 
 std::string ResourceManager::getFileString(const std::string& AdditionalPath)

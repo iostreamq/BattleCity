@@ -10,8 +10,9 @@ namespace Renderer {
 	class Sprite
 	{
 	public:
-		Sprite(const std::shared_ptr<Renderer::Texture2D> pTexture, 
-			const std::shared_ptr<Renderer::ShaderProgram> pShaderProgram, 
+		Sprite(std::shared_ptr<Renderer::Texture2D> pTexture,
+			std::string&& initialSubTexture,	
+		    std::shared_ptr<Renderer::ShaderProgram> pShaderProgram, 
 		    const glm::vec2& position = glm::vec2(0.f), 
 			const glm::vec2& size = glm::vec2(1.f), 
 			const float rotation = 0.f);
@@ -36,7 +37,6 @@ namespace Renderer {
 		 GLuint m_vao;
 		 GLuint vertexs_vbo;
 		 GLuint textureCrds_vbo;
-
 	};
 
 	

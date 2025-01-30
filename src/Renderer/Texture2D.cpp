@@ -65,3 +65,22 @@ void Renderer::Texture2D::bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, m_ID);
 }
+
+void Renderer::Texture2D::addSubTexture(std::string&& name, const glm::vec2& leftBottomUV, const glm::vec2& rightTopUV)
+{
+	m_subTextures.emplace(std::move(name), subTexture2D(leftBottomUV, rightTopUV)); 
+}
+
+const Renderer::Texture2D::subTexture2D& Renderer::Texture2D::getSubTexture(const std::string& name) const
+{
+	
+    auto it = m_subTextures.find(name);
+	if (it != m_subTextures.end()) {
+		return it->second;
+	}
+     
+	const static subTexture2D defaultSubTexture; /// static здесь используется для того, чтобы объект defaultSubTexture был создан только один раз,
+	//не занимал лишнюю память при каждом вызове функции, и оставался постоянным и доступным для всех вызовов этой функции.
+	return defaultSubTexture;
+}
+
