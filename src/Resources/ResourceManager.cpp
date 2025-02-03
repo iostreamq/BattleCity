@@ -110,6 +110,55 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::loadSprites(const std::string
 	return DefaultSprite; 
 }
 
+std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::loadAnimatedSprites(const std::string& spriteName, 
+														 				       const std::string& textureName, 
+																			   const std::string& shaderName, 
+																			   const unsigned int spriteWidth, 
+																			   const unsigned int spriteHeight, 
+																			   std::string&& subTextureName)
+{
+	std::shared_ptr<Renderer::Texture2D> pTexture = getTexture(textureName);
+	if (!pTexture) {
+		std::cerr << "Can`t find texture" << textureName << "for the sprite" << spriteName << std::endl;
+		return nullptr;
+	}
+
+	std::shared_ptr<Renderer::ShaderProgram> pShader = getShaderProgram(shaderName);
+
+	if (!pShader) {
+		std::cerr << "Can`t find shader" << shaderName << "for the sprite" << spriteName << std::endl;
+		return nullptr;
+	}
+
+	std::shared_ptr<Renderer::AnimatedSprite>& DefaultSprite = m_AnimatedSpritesMap.emplace(spriteName,
+		std::make_shared<Renderer::AnimatedSprite>(pTexture,
+			std::move(subTextureName),
+			pShader,
+			glm::vec2(0.f, 0.f),
+			glm::vec2(spriteWidth, spriteHeight))).first->second;
+	return DefaultSprite;
+}
+
+std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::getAnimatedSprite(std::string&& spriteName)
+{
+	auto it = m_AnimatedSpritesMap.find(spriteName);
+	if (it != m_AnimatedSpritesMap.end()) {
+		return it->second;
+	}
+	std::cerr << "Can`t find this animated sprite" << spriteName << std::endl;
+	return nullptr;
+}
+
+
+std::shared_ptr<Renderer::Sprite> ResourceManager::getSprite(std::string&& spriteName)
+{
+	SpritesMap::const_iterator it = m_SpritesMap.find(spriteName);
+	if (it != m_SpritesMap.end()) {
+		return it->second;
+	}
+	std::cerr << "Can`t find the sprite" << spriteName << std::endl;
+	return nullptr;
+}
 
 std::shared_ptr<Renderer::Texture2D> ResourceManager::loadTextureAtlas(std::string&& textureName,
 																	  std::string&& texturePath, 

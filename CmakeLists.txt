@@ -9,11 +9,13 @@ src/Renderer/ShaderProgram.cpp
 src/Resources/ResourceManager.cpp
 src/Renderer/Texture2D.cpp
 src/Renderer/Sprite.cpp
+src/Renderer/AnimatedSprite.cpp
 src/Resources/ResourceManager.h
 src/Renderer/ShaderProgram.h
 src/Resources/stb_image.h
 src/Renderer/Texture2D.h
 src/Renderer/Sprite.h
+src/Renderer/AnimatedSprite.h
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

@@ -9,6 +9,9 @@
 #include "external/glm/mat4x4.hpp"
 #include "external/glm/gtc/matrix_transform.hpp"
 #include "Renderer/Sprite.h"
+#include "Renderer/AnimatedSprite.h"    
+#include <chrono>
+#include <thread>
 
 
 GLfloat point[] = { //typedef float GLfloat;
@@ -105,11 +108,59 @@ int main(int argc, char** argv)
 
         auto tex = ResourceManager.loadTexture("DefaultTexture", "/res/textures/map_16x16.png");
 
-        std::vector<std::string> subTexturesNames = {"block", "topBlock", "BottomBlock", "leftBlock", "rightBlock", "topLeftBlock","topRightBlock","bottomLeftBlock",
-        "bottomRightBlock","beton"};
+        std::vector<std::string> subTexturesNames = {"block", 
+                                                    "topBlock", 
+                                                    "BottomBlock", 
+                                                    "leftBlock", 
+                                                    "rightBlock", 
+                                                    "topLeftBlock",
+                                                    "topRightBlock",
+                                                    "bottomLeftBlock",
+                                                    "bottomRightBlock",
+                                                   
+                                                    "beton",
+                                                    "topBeton", 
+                                                    "bottomBeton",
+                                                    "leftBeton",
+                                                    "rightBeton",
+                                                    "topLeftBeton",
+                                                    "topRightBeton",
+                                                    "bottomLeftBeton",
+                                                    "bottomRightBeton",
+                                                    
+                                                    "water1",
+                                                    "water2",
+                                                    "water3",                                                   
+                                                    "trees", 
+                                                    "ice", 
+                                                    "wall",
+                                        
+                                                    "eagle",
+                                                    "deadEagle",
+                                                    "nothing",
+                                                    "respawn1",
+                                                    "respawn2",
+                                                    "respawn3",
+                                                    "respawn4" };
+
         auto pTextureAtas = ResourceManager.loadTextureAtlas("DefaultTextureAtlas", "/res/textures/map_16x16.png", std::move(subTexturesNames), 16, 16);
         auto pSprite = ResourceManager.loadSprites("DefaultSprite", "DefaultTextureAtlas", "SpriteShaderProgram", 100, 100,"beton");
         pSprite->setPosition(glm::vec2(300, 100));
+        auto pAnimatedSprite = ResourceManager.loadAnimatedSprites("DefaultAnimatedSprite", "DefaultTextureAtlas", "SpriteShaderProgram", 100, 100, "beton");
+        pAnimatedSprite->setPosition(glm::vec2(300, 300));
+        std::vector<std::pair<std::string, uint64_t>> waterState;
+        waterState.emplace_back(std::make_pair<std::string , uint64_t>("water1",1000000000));///////////???????????????????????
+        waterState.emplace_back(std::make_pair<std::string , uint64_t>("water2",1000000000));///////////???????????????????????
+        waterState.emplace_back(std::make_pair<std::string , uint64_t>("water3",1000000000));///////////???????????????????????
+
+        std::vector<std::pair<std::string, uint64_t>> eagleState;
+        eagleState.emplace_back(std::make_pair<std::string, uint64_t>("eagle", 1000000000));///////////???????????????????????
+        eagleState.emplace_back(std::make_pair<std::string, uint64_t>("deadEagle", 1000000000));///////////???????????????????????
+
+        pAnimatedSprite->insertState("waterState", std::move(waterState));
+        pAnimatedSprite->insertState("eagleState", std::move(eagleState));
+
+        pAnimatedSprite->setState("waterState");
 
         //далее нам нужно передать необходимую информацию видеокарте(кординаты и цвета)
         // В контексте OpenGL буфер — это область памяти, которая используется для хранения данных. Например, буфер может хранить информацию о вершинах (вертексах), цветах, текстурах или других данных, которые могут быть использованы при рендеринге.
@@ -165,16 +216,24 @@ int main(int argc, char** argv)
         pShaderProgram->setMatrix4("projectionMatrix", projectionMatrix);
        
         pSpriteShaderProgram->use();
+        pTextureAtas->bind();////////////////////////////////////////////////////////////////////////
         pSpriteShaderProgram->setInt("tex", 0);
         pSpriteShaderProgram->setMatrix4("projectionMatrix", projectionMatrix);
         pShaderProgram->setMatrix4("modelMatrix", modelMatrix_1);
 
+        auto lastTime = std::chrono::high_resolution_clock::now();      
+
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(pWindow))//если стоит флаг !true(который мы поставили в keyCallback), то выходим из цикла и завершаем работу
         {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();
+            lastTime = currentTime;
+            pAnimatedSprite->update(duration);
+
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
-
+            
             //чтобы нарисовать подключаем шейдеры которые хотим использовать для рисования
             //pShaderProgram->use();
             glBindVertexArray(vao);// подключаем vao которые хотим отрисовать
@@ -186,9 +245,9 @@ int main(int argc, char** argv)
 
             pShaderProgram->setMatrix4("modelMatrix", modelMatrix_2);
             glDrawArrays(GL_TRIANGLES, 0, 3);//
-
             
             pSprite->Render();
+            pAnimatedSprite->Render();
 
             /* Swap front and back buffers */
             glfwSwapBuffers(pWindow);

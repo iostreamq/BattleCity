@@ -5,6 +5,7 @@
 #include "../Renderer/ShaderProgram.h" 
 #include "../Renderer/Texture2D.h" 
 #include "../Renderer/Sprite.h"
+#include "../Renderer/AnimatedSprite.h"
 #include <vector>
 class ResourceManager {
 
@@ -25,6 +26,15 @@ public:
 		                                          const unsigned int spriteWidth, 
 		                                          const unsigned int spriteHeight,
 												  std::string&& subTextureName = "DEFAULT");
+	std::shared_ptr<Renderer::Sprite> getSprite(std::string&& spriteName);
+	std::shared_ptr<Renderer::AnimatedSprite> loadAnimatedSprites(const std::string& spriteName,
+												  const std::string& textureName,
+												  const std::string& shaderName,
+												  const unsigned int spriteWidth,
+												  const unsigned int spriteHeight,
+												  std::string&& subTextureName = "DEFAULT");
+	std::shared_ptr<Renderer::AnimatedSprite> getAnimatedSprite(std::string&& spriteName);
+
 	std::shared_ptr<Renderer::Texture2D> loadTextureAtlas(std::string&& textureName,
 														  std::string&& texturePath,
 														  std::vector<std::string> vecNamesOfSubTex,
@@ -36,7 +46,9 @@ private:
 	typedef std::map<const std::string, std::shared_ptr<Renderer::ShaderProgram>> ShaderProgramsMap; // как будто юзлес нахуй она вообще только если статик делать или только для имени 
 	typedef std::map<const std::string, std::shared_ptr<Renderer::Texture2D>> TexturesMap;
 	typedef std::map<const std::string, std::shared_ptr<Renderer::Sprite>> SpritesMap;
+	typedef std::map<const std::string, std::shared_ptr<Renderer::AnimatedSprite>> AnimatedSpritesMap;
 	ShaderProgramsMap m_shaderPrograms;
 	TexturesMap m_TexturesMap;
 	SpritesMap m_SpritesMap;
+	AnimatedSpritesMap m_AnimatedSpritesMap;
 };
