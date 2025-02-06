@@ -7,11 +7,26 @@
 #include "stb_image.h"
 //#include "external/glm/vec2.hpp"
 
-ResourceManager::ResourceManager(const std::string& executablePath)
+ResourceManager::ShaderProgramsMap ResourceManager::m_shaderPrograms;
+ResourceManager::TexturesMap ResourceManager::m_TexturesMap;
+ResourceManager::SpritesMap ResourceManager::m_SpritesMap;
+ResourceManager::AnimatedSpritesMap ResourceManager::m_AnimatedSpritesMap;
+std::string ResourceManager::m_Path;
+
+
+ void ResourceManager::setExecutablePath(const std::string& executablePath)
 {
 	 size_t found = executablePath.find_last_of("/\\");
 	 m_Path = executablePath.substr(0, found);
 }
+
+ void ResourceManager::unloadAllResources()
+ {
+	 m_shaderPrograms.clear(); /// зачемм
+	 m_TexturesMap.clear();
+	 m_SpritesMap.clear();
+	 m_AnimatedSpritesMap.clear();
+ }
 
 std::shared_ptr<Renderer::ShaderProgram> ResourceManager::loadShaders(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath)
 {
