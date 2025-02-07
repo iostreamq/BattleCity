@@ -38,13 +38,13 @@ namespace Renderer {
 		}
 	}
 
-	void AnimatedSprite::update(const uint64_t delta)  // что за невалидны it
+	void AnimatedSprite::update(const uint64_t delta)  
 	{
 		if (m_pCurrentAnimationsDurations != m_statesMap.end()) {
 
 			m_currentAnimationTime += delta;
 			
-			while (m_currentAnimationTime >= m_pCurrentAnimationsDurations->second[m_currentFrame].second) // почему пишем [m_currentFrame]
+			while (m_currentAnimationTime >= m_pCurrentAnimationsDurations->second[m_currentFrame].second) 
 			{
 				m_currentAnimationTime -= m_pCurrentAnimationsDurations->second[m_currentFrame].second;
 				m_currentFrame++;

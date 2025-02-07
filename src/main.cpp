@@ -76,6 +76,7 @@ int main(int argc, char** argv)
      
        
         auto lastTime = std::chrono::high_resolution_clock::now();
+        // только после создания контекста и инициализации openGL
         ResourceManager::setExecutablePath(argv[0]);
         g_game.init();
         
