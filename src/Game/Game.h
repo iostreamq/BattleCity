@@ -25,5 +25,5 @@ private:
 
 	EGameState m_CurrentGameState;
 	glm::ivec2 m_windowSize;
-	std::unique_ptr<Tank> m_pTank; ///////////////////////////////////////////////////////////////////////////////
+	std::unique_ptr<Tank> m_pTank; 
 };

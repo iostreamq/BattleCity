@@ -3,8 +3,8 @@
 #include<glad/glad.h> // voprsik pochemu glad
 #include"external/glm/mat4x4.hpp"
 
-namespace Renderer{ // для чего namespace?
-	
+namespace Renderer{ 
+
 	class ShaderProgram {
 	public:
 		ShaderProgram(const std::string& vertexShader, const std::string& fragmentShader); // constr на вход соурс код шейдеров // какая разница передаеи string или char??

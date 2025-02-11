@@ -3,6 +3,9 @@
 #include <memory>
 #include "Texture2D.h"
 #include "ShaderProgram.h"
+#include "VertexBuffer.h"
+#include "indexBuffer.h"
+#include "VertexArray.h"
 #include "external/glm/vec2.hpp"
 
 namespace Renderer {
@@ -34,9 +37,10 @@ namespace Renderer {
 		 glm::vec2 m_position;
 		 glm::vec2 m_size;
 		 float m_rotation;
-		 GLuint m_vao;
-		 GLuint m_vertexsVBO;
-		 GLuint m_textureCrdsVBO;
+		 VertexArray m_vertexArray;
+		 VertexBuffer m_vertexsCoordsBuffer;
+		 VertexBuffer m_textureCoordsBuffer;
+		 indexBuffer  m_IndexBuffer;
 	};
 
 	

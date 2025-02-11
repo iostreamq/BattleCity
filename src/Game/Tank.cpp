@@ -60,7 +60,7 @@ void Tank::move(const bool move)
 void Tank::update(const uint64_t delta)
 {
 	if (m_move) {
-		m_position += delta * m_velocity * m_moveOffset; //////////////////////////////////////////
+		m_position += delta * m_velocity * m_moveOffset; // беру veloc поэтому плюсую
 		m_pSprite->setPosition(m_position);
 		m_pSprite->update(delta);
 	}

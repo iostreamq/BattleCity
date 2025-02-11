@@ -24,7 +24,7 @@ namespace Renderer {
 
 		void insertState(std::string&& state, std::vector<std::pair<std::string, uint64_t>> subTexturesDuration);
 
-		void Render() const override; 
+		void Render() const override;
 		
 		void setState(std::string&& newState);
 		void update(const uint64_t delta); // время прошедшее с момента последнего кадра, то есть каждый кадр не моментально просчитывается, а какое-то время и длительность
@@ -34,8 +34,8 @@ namespace Renderer {
 	   // кокретное состояние будет иметь анимацию-последовательность кадров, то есть к каждому состоянию идет последовательность кадров и каждому кадру своя длительность
 		std::map <std::string, std::vector<std::pair<std::string, uint64_t>>>::const_iterator m_pCurrentAnimationsDurations;
 		size_t m_currentFrame = 0;
-		uint64_t m_currentAnimationTime = 0; // что за uint64_t
-		mutable bool m_dirty = false; // что такое mutable
+		uint64_t m_currentAnimationTime = 0; 
+		mutable bool m_dirty = false; 
 	 };
 
 	

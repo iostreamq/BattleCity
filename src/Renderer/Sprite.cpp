@@ -1,4 +1,5 @@
 #include "Sprite.h"
+#include "VertexBufferLayout.h"
 #include "external/glm/mat4x4.hpp"
 #include "external/glm/gtc/matrix_transform.hpp"
 #include "external/glm/gtc/type_ptr.hpp"
@@ -23,10 +24,7 @@ namespace Renderer {
 			0.f, 0.f,
 			0.f, 1.f,
 			1.f, 1.f,
-
-			1.f, 1.f,
-			1.f, 0.f,
-			0.f, 0.f,
+			1.f, 0.f
 		};
 
 		auto subTexture = m_pTexture->getSubTexture(std::move(initialSubTexture)); 
@@ -35,38 +33,40 @@ namespace Renderer {
 		  subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
 		  subTexture.leftBottomUV.x,  subTexture.rightTopUV.y,
 		  subTexture.rightTopUV.x, subTexture.rightTopUV.y,
-
-		  subTexture.rightTopUV.x, subTexture.rightTopUV.y,
 		  subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
-		  subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
-		}; /////// всегда же x y
-
-		glGenVertexArrays(1, &m_vao);
-		glBindVertexArray(m_vao); 
-
-		glGenBuffers(1, &m_vertexsVBO);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vertexsVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexCoords), vertexCoords, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 	
-		glGenBuffers(1, &m_textureCrdsVBO);
-		glBindBuffer(GL_ARRAY_BUFFER, m_textureCrdsVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), textureCoords, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+		}; 
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+		// по аналогии с коордами мы задаем индексы, которые соотносятся с моими коордами
+		const GLuint indices[] = {
+			  0,1,2,
+			  2,3,0	
+		};
 
-		
+         
+		m_vertexArray.bind(); // how does it work without binding
+		m_vertexsCoordsBuffer.init(&vertexCoords, 2 * 4 * sizeof(GLfloat)); 
+		VertexBufferLayout vertexCoordsLayout;
+		vertexCoordsLayout.addElementLayoutFloat(2, false);
+		m_vertexArray.addBuffer(m_vertexsCoordsBuffer, vertexCoordsLayout);
+	
+		m_textureCoordsBuffer.init(&textureCoords, 2 * 4 * sizeof(GLfloat)); 
+		VertexBufferLayout textureCoordsLayout;
+		textureCoordsLayout.addElementLayoutFloat(2, false);
+		m_vertexArray.addBuffer(m_textureCoordsBuffer, textureCoordsLayout);
+
+
+		m_IndexBuffer.init(&indices, 6 * sizeof(GLuint));
+        
+		m_vertexArray.unbind();
+		//m_vertexsCoordsBuffer.unbind();
+		//m_textureCoordsBuffer.unbind();
+		m_IndexBuffer.unbind();
 	}
 
 	Sprite::~Sprite()
-	{
-		glDeleteBuffers(1, &m_vertexsVBO);
-		glDeleteBuffers(1, &m_textureCrdsVBO);
-		glDeleteVertexArrays(1, &m_vao);
+	{		
+		
 	}
 
 
@@ -80,14 +80,16 @@ namespace Renderer {
 		model = glm::rotate(model, glm::radians(m_rotation),glm::vec3(0.f,0.f,1)); 
 		model = glm::translate(model, glm::vec3(-0.5f* m_size.x, -0.5f*m_size.y, 0.f)); 
 		model = glm::scale(model, glm::vec3(m_size, 1.f));
-	
-		glBindVertexArray(m_vao);
+	   
+		m_vertexArray.bind();
 		m_pShaderProgram->setMatrix4("modelMatrix", model);
 		glActiveTexture(GL_TEXTURE0);
 		m_pTexture->bind();
 
-		glDrawArrays(GL_TRIANGLES, 0, 6); 
-		glBindVertexArray(0);
+	    
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr); // mode сколько индексов тип и оффсет	
+		m_vertexArray.unbind();
 	}
 
 	void Sprite::setPosition(const glm::vec2& position)

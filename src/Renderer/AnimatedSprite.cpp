@@ -65,18 +65,13 @@ namespace Renderer {
 			auto subTexture = m_pTexture->getSubTexture(m_pCurrentAnimationsDurations->second[m_currentFrame].first);
 
 			const GLfloat textureCoords[] = {
-			  subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
-			  subTexture.leftBottomUV.x,  subTexture.rightTopUV.y,
-			  subTexture.rightTopUV.x, subTexture.rightTopUV.y,
+		  subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
+		  subTexture.leftBottomUV.x,  subTexture.rightTopUV.y,
+		  subTexture.rightTopUV.x, subTexture.rightTopUV.y,
+		  subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
+			}; // чтоб не мучаться делай 2 буфера. если бы мы не меняли корды текстур то все было бы в одном буфере(sprite.cpp)
 
-			  subTexture.rightTopUV.x, subTexture.rightTopUV.y,
-			  subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
-			  subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
-			}; /////// всегда же x y
-
-			glBindBuffer(GL_ARRAY_BUFFER, m_textureCrdsVBO);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(textureCoords), &textureCoords); // передает определенные данные которые обновляют тек буфер
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			m_textureCoordsBuffer.update(&textureCoords, 2 * 4 * sizeof(GLfloat)); // передает определенные данные которые обновляют тек буфер
 			m_dirty = false;
 		}
 		Sprite::Render();

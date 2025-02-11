@@ -10,6 +10,10 @@ src/Resources/ResourceManager.cpp
 src/Renderer/Texture2D.cpp
 src/Renderer/Sprite.cpp
 src/Renderer/AnimatedSprite.cpp
+src/Renderer/VertexBuffer.cpp
+src/Renderer/indexBuffer.cpp
+src/Renderer/VertexArray.cpp
+src/Renderer/VertexBufferLayout.cpp
 src/Game/Game.cpp
 src/Game/Tank.cpp
 src/Resources/ResourceManager.h
@@ -18,6 +22,10 @@ src/Resources/stb_image.h
 src/Renderer/Texture2D.h
 src/Renderer/Sprite.h
 src/Renderer/AnimatedSprite.h
+src/Renderer/VertexBuffer.h
+src/Renderer/indexBuffer.h
+src/Renderer/VertexArray.h
+src/Renderer/VertexBufferLayout.h
 src/Game/Game.h
 src/Game/Tank.h
 )
