@@ -4,7 +4,7 @@
 #include "external/glm/vec2.hpp"
 #include <map>
 
-namespace Renderer {
+namespace RenderEngine {
 	class Texture2D {
 	public:
 

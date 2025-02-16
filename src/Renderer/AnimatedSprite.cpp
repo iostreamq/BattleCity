@@ -2,10 +2,10 @@
 #include <iostream>
 
 
-namespace Renderer {
-	AnimatedSprite::AnimatedSprite(std::shared_ptr<Renderer::Texture2D> pTexture,
+namespace RenderEngine {
+	AnimatedSprite::AnimatedSprite(std::shared_ptr<RenderEngine::Texture2D> pTexture,
 		std::string&& initialSubTexture,
-		std::shared_ptr<Renderer::ShaderProgram> pShaderProgram,
+		std::shared_ptr<RenderEngine::ShaderProgram> pShaderProgram,
 		const glm::vec2& position,
 		const glm::vec2& size,
 		const float rotation) :

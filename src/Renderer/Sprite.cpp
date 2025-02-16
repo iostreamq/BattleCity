@@ -1,14 +1,15 @@
 #include "Sprite.h"
 #include "VertexBufferLayout.h"
+#include "Renderer.h"
 #include "external/glm/mat4x4.hpp"
 #include "external/glm/gtc/matrix_transform.hpp"
 #include "external/glm/gtc/type_ptr.hpp"
 
 
-namespace Renderer {
-	Sprite::Sprite(std::shared_ptr<Renderer::Texture2D> pTexture,
+namespace RenderEngine {
+	Sprite::Sprite(std::shared_ptr<RenderEngine::Texture2D> pTexture,
 		std::string&& initialSubTexture,
-		std::shared_ptr<Renderer::ShaderProgram> pShaderProgram,
+		std::shared_ptr<RenderEngine::ShaderProgram> pShaderProgram,
 		const glm::vec2& position,
 		const glm::vec2& size,
 		const float rotation):
@@ -21,12 +22,12 @@ namespace Renderer {
 	{
 
 		const GLfloat vertexCoords[] = {
-			0.f, 0.f,
+			0.f, 0.f, 
 			0.f, 1.f,
 			1.f, 1.f,
 			1.f, 0.f
 		};
-
+		
 		auto subTexture = m_pTexture->getSubTexture(std::move(initialSubTexture)); 
 		
 		const GLfloat textureCoords[] = {
@@ -56,7 +57,7 @@ namespace Renderer {
 		m_vertexArray.addBuffer(m_textureCoordsBuffer, textureCoordsLayout);
 
 
-		m_IndexBuffer.init(&indices, 6 * sizeof(GLuint));
+		m_IndexBuffer.init(&indices, 6);
         
 		m_vertexArray.unbind();
 		//m_vertexsCoordsBuffer.unbind();
@@ -81,15 +82,11 @@ namespace Renderer {
 		model = glm::translate(model, glm::vec3(-0.5f* m_size.x, -0.5f*m_size.y, 0.f)); 
 		model = glm::scale(model, glm::vec3(m_size, 1.f));
 	   
-		m_vertexArray.bind();
-		m_pShaderProgram->setMatrix4("modelMatrix", model);
+		m_pShaderProgram->setMatrix4("modelMatrix", model); // работает только bind shaderprogram??
 		glActiveTexture(GL_TEXTURE0);
 		m_pTexture->bind();
-
-	    
-
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr); // mode сколько индексов тип и оффсет	
-		m_vertexArray.unbind();
+		//unbind ток для дебагинга в релиз можно не писать только ресурсы затрачиваются 
+		Renderer::draw(m_vertexArray, m_IndexBuffer,*m_pShaderProgram);
 	}
 
 	void Sprite::setPosition(const glm::vec2& position)

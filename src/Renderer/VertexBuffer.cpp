@@ -1,25 +1,25 @@
 #include "VertexBuffer.h"
 
-Renderer::VertexBuffer::~VertexBuffer()
+RenderEngine::VertexBuffer::~VertexBuffer()
 {
 	glDeleteBuffers(1, &m_id);
 }
 
-Renderer::VertexBuffer& Renderer::VertexBuffer::operator=(VertexBuffer&& vertexBuffer) noexcept
+RenderEngine::VertexBuffer& RenderEngine::VertexBuffer::operator=(VertexBuffer&& vertexBuffer) noexcept
 {
 	m_id = vertexBuffer.m_id;
 	vertexBuffer.m_id = 0;
 	return *this;
 }
 
-Renderer::VertexBuffer::VertexBuffer(VertexBuffer&& vertexBuffer) noexcept 
+RenderEngine::VertexBuffer::VertexBuffer(VertexBuffer&& vertexBuffer) noexcept 
 {
 	m_id = vertexBuffer.m_id;
 	vertexBuffer.m_id = 0;
 }
 
 
-void Renderer::VertexBuffer::init(const void* data, const unsigned int size)
+void RenderEngine::VertexBuffer::init(const void* data, const unsigned int size)
 {
 	glGenBuffers(1, &m_id);
 	glBindBuffer(GL_ARRAY_BUFFER, m_id);
@@ -27,20 +27,20 @@ void Renderer::VertexBuffer::init(const void* data, const unsigned int size)
 
 }
 
-void Renderer::VertexBuffer::update(const void* data, const unsigned int size) const
+void RenderEngine::VertexBuffer::update(const void* data, const unsigned int size) const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_id);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 
 }
 
-void Renderer::VertexBuffer::bind() const
+void RenderEngine::VertexBuffer::bind() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_id);
 
 }
 
-void Renderer::VertexBuffer::unbind() const
+void RenderEngine::VertexBuffer::unbind() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 

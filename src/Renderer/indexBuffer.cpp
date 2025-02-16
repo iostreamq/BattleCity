@@ -1,39 +1,40 @@
 #include "indexBuffer.h"
 
-Renderer::indexBuffer::~indexBuffer()
+RenderEngine::indexBuffer::~indexBuffer()
 {
 	glDeleteBuffers(1, &m_id);
 }
 
-Renderer::indexBuffer& Renderer::indexBuffer::operator=(indexBuffer&& indexBuffer) noexcept
+RenderEngine::indexBuffer& RenderEngine::indexBuffer::operator=(indexBuffer&& indexBuffer) noexcept
 {
 	m_id = indexBuffer.m_id;
 	indexBuffer.m_id = 0;
 	return *this;
 }
 
-Renderer::indexBuffer::indexBuffer(indexBuffer&& indexBuffer) noexcept
+RenderEngine::indexBuffer::indexBuffer(indexBuffer&& indexBuffer) noexcept
 {
 	m_id = indexBuffer.m_id;
 	indexBuffer.m_id = 0;
 }
 
 
-void Renderer::indexBuffer::init(const void* data, const unsigned int size)
+void RenderEngine::indexBuffer::init(const void* data, const unsigned int count)
 {
+	m_count = count;
 	glGenBuffers(1, &m_id);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size/*sizeof(data)*/, data, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count*sizeof(GLuint), data, GL_STATIC_DRAW);
 
 }
 
-void Renderer::indexBuffer::bind() const
+void RenderEngine::indexBuffer::bind() const
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
 
 }
 
-void Renderer::indexBuffer::unbind() const
+void RenderEngine::indexBuffer::unbind() const
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 

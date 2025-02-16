@@ -4,7 +4,7 @@
 
 
 
-namespace Renderer {
+namespace RenderEngine {
 
 	ShaderProgram::ShaderProgram(const std::string& vertexShader, const std::string& fragmentShader) 
 	{
@@ -94,6 +94,9 @@ namespace Renderer {
 		glDeleteProgram(m_ID);
 	}
 
+	void ShaderProgram::unuse() const {
+		glUseProgram(0);
+	}
 	 void ShaderProgram::use() const  {
 		 glUseProgram(m_ID);
 	  }

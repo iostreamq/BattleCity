@@ -3,7 +3,7 @@
 #include<glad/glad.h> // voprsik pochemu glad
 #include"external/glm/mat4x4.hpp"
 
-namespace Renderer{ 
+namespace RenderEngine{ 
 
 	class ShaderProgram {
 	public:
@@ -19,6 +19,7 @@ namespace Renderer{
 		ShaderProgram& operator = (const ShaderProgram&) = delete; // тоже самое что и 2-ое
 		ShaderProgram& operator=(ShaderProgram&&) noexcept;
 		ShaderProgram(ShaderProgram&&) noexcept;
+		void ShaderProgram::unuse() const;
 
 	private:
 		bool createShader(const std::string& source, const GLenum shaderType, GLuint& shaderID); // shaderID перадем m_ID и по референсу записываем значение id... , GLenum?? 

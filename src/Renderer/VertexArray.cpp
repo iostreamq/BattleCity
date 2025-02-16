@@ -1,29 +1,29 @@
 #include "VertexArray.h"
 
-Renderer::VertexArray::~VertexArray()
+RenderEngine::VertexArray::~VertexArray()
 {
 	glDeleteVertexArrays(1, &m_id);
 }
 
-Renderer::VertexArray::VertexArray()
+RenderEngine::VertexArray::VertexArray()
 {
 	glGenVertexArrays(1, &m_id);
 }
 
-Renderer::VertexArray& Renderer::VertexArray::operator=(VertexArray&& VertexArray) noexcept
+RenderEngine::VertexArray& RenderEngine::VertexArray::operator=(VertexArray&& VertexArray) noexcept
 {
 	m_id = VertexArray.m_id;
 	VertexArray.m_id = 0;
 	return *this;
 }
 
-Renderer::VertexArray::VertexArray(VertexArray&& VertexArray) noexcept 
+RenderEngine::VertexArray::VertexArray(VertexArray&& VertexArray) noexcept 
 {
 	m_id = VertexArray.m_id;
 	VertexArray.m_id = 0;
 }
 
-void Renderer::VertexArray::addBuffer(const VertexBuffer& vertexBuffer, const VertexBufferLayout& layout)
+void RenderEngine::VertexArray::addBuffer(const VertexBuffer& vertexBuffer, const VertexBufferLayout& layout)
 {
 	bind();
 	vertexBuffer.bind();
@@ -41,13 +41,13 @@ void Renderer::VertexArray::addBuffer(const VertexBuffer& vertexBuffer, const Ve
 }
 
 
-void Renderer::VertexArray::bind() const
+void RenderEngine::VertexArray::bind() const
 {
 	glBindVertexArray(m_id);
 
 }
 
-void Renderer::VertexArray::unbind() const
+void RenderEngine::VertexArray::unbind() const
 {
 	glBindVertexArray(0);
 

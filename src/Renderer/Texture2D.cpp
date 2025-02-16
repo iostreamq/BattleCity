@@ -1,7 +1,7 @@
 #include "Texture2D.h"
 
 
-Renderer::Texture2D::Texture2D(const GLuint width, 
+RenderEngine::Texture2D::Texture2D(const GLuint width, 
 	const GLuint height, 
 	const unsigned char* data, 
 	const unsigned channels, 
@@ -35,13 +35,13 @@ Renderer::Texture2D::Texture2D(const GLuint width,
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Renderer::Texture2D::~Texture2D()
+RenderEngine::Texture2D::~Texture2D()
 {
 	glDeleteTextures(1, &m_ID);
 }
 
 
-Renderer::Texture2D& Renderer::Texture2D::operator=(Texture2D&& texture2D) noexcept
+RenderEngine::Texture2D& RenderEngine::Texture2D::operator=(Texture2D&& texture2D) noexcept
 {
 	glDeleteTextures(1,&m_ID);
 	m_ID = texture2D.m_ID;
@@ -52,7 +52,7 @@ Renderer::Texture2D& Renderer::Texture2D::operator=(Texture2D&& texture2D) noexc
 	return *this;
 }
 
-Renderer::Texture2D::Texture2D(Texture2D&& texture2D) noexcept
+RenderEngine::Texture2D::Texture2D(Texture2D&& texture2D) noexcept
 {
 	m_ID = texture2D.m_ID;
 	m_mode = texture2D.m_mode;
@@ -61,17 +61,17 @@ Renderer::Texture2D::Texture2D(Texture2D&& texture2D) noexcept
 	texture2D.m_ID = 0;
 }
 
-void Renderer::Texture2D::bind() const
+void RenderEngine::Texture2D::bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, m_ID);
 }
 
-void Renderer::Texture2D::addSubTexture(std::string&& name, const glm::vec2& leftBottomUV, const glm::vec2& rightTopUV)
+void RenderEngine::Texture2D::addSubTexture(std::string&& name, const glm::vec2& leftBottomUV, const glm::vec2& rightTopUV)
 {
 	m_subTextures.emplace(std::move(name), subTexture2D(leftBottomUV, rightTopUV)); 
 }
 
-const Renderer::Texture2D::subTexture2D& Renderer::Texture2D::getSubTexture(const std::string& name) const
+const RenderEngine::Texture2D::subTexture2D& RenderEngine::Texture2D::getSubTexture(const std::string& name) const
 {
 	
     auto it = m_subTextures.find(name);
