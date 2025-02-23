@@ -4,21 +4,16 @@
 #include "external/glm/mat4x4.hpp"
 #include "external/glm/gtc/matrix_transform.hpp"
 #include "external/glm/gtc/type_ptr.hpp"
+#include <iostream>
 
 
 namespace RenderEngine {
 	Sprite::Sprite(std::shared_ptr<RenderEngine::Texture2D> pTexture,
 		std::string&& initialSubTexture,
-		std::shared_ptr<RenderEngine::ShaderProgram> pShaderProgram,
-		const glm::vec2& position,
-		const glm::vec2& size,
-		const float rotation):
-		
+		std::shared_ptr<RenderEngine::ShaderProgram> pShaderProgram
+		):		
 		m_pTexture(std::move(pTexture)), 
-		m_pShaderProgram(std::move(pShaderProgram)),
-		m_position(position), 
-		m_size(size),
-		m_rotation(rotation)
+		m_pShaderProgram(std::move(pShaderProgram))		
 	{
 
 		const GLfloat vertexCoords[] = {
@@ -31,10 +26,10 @@ namespace RenderEngine {
 		auto subTexture = m_pTexture->getSubTexture(std::move(initialSubTexture)); 
 		
 		const GLfloat textureCoords[] = {
-		  subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
-		  subTexture.leftBottomUV.x,  subTexture.rightTopUV.y,
-		  subTexture.rightTopUV.x, subTexture.rightTopUV.y,
-		  subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
+		  subTexture.leftBottomUV.x,	subTexture.leftBottomUV.y,
+		  subTexture.leftBottomUV.x,	subTexture.rightTopUV.y,
+		  subTexture.rightTopUV.x,		subTexture.rightTopUV.y,
+		  subTexture.rightTopUV.x,		subTexture.leftBottomUV.y,
 	
 		}; 
 
@@ -71,38 +66,24 @@ namespace RenderEngine {
 	}
 
 
-	void Sprite::Render() const
+
+	void Sprite::Render(const glm::vec2& position, const glm::vec2& size, const float rotation) const
 	{
 		m_pShaderProgram->use();
+
 		glm::mat4 model(1.f);
 
-	    model = glm::translate(model, glm::vec3(m_position,0.f)); 
-	    model = glm::translate(model, glm::vec3(0.5f * m_size.x, 0.5f * m_size.y, 0.f)); 
-		model = glm::rotate(model, glm::radians(m_rotation),glm::vec3(0.f,0.f,1)); 
-		model = glm::translate(model, glm::vec3(-0.5f* m_size.x, -0.5f*m_size.y, 0.f)); 
-		model = glm::scale(model, glm::vec3(m_size, 1.f));
-	   
-		m_pShaderProgram->setMatrix4("modelMatrix", model); // работает только bind shaderprogram??
+		model = glm::translate(model, glm::vec3(position, 0.f));
+		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.f));
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.f, 0.f, 1.f));
+		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.f));
+		model = glm::scale(model, glm::vec3(size, 1.f));
+
+		m_pShaderProgram->setMatrix4("modelMatrix", model);
+
 		glActiveTexture(GL_TEXTURE0);
 		m_pTexture->bind();
-		//unbind ток для дебагинга в релиз можно не писать только ресурсы затрачиваются 
-		Renderer::draw(m_vertexArray, m_IndexBuffer,*m_pShaderProgram);
+
+		Renderer::draw(m_vertexArray, m_IndexBuffer, *m_pShaderProgram);
 	}
-
-	void Sprite::setPosition(const glm::vec2& position)
-	{
-		m_position = position;
-	}
-
-	void Sprite::setSize(const glm::vec2& size)
-	{
-		m_size = size;
-	}
-
-
-	void Sprite::setRotation(const float rotation)
-	{
-		m_rotation = rotation;
-	}
-
 }

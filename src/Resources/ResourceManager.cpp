@@ -7,6 +7,7 @@
 #include "stb_image.h"
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
+#include "../Game/Levels.h"
 //#include "external/glm/vec2.hpp"
 
 ResourceManager::ShaderProgramsMap ResourceManager::m_shaderPrograms;
@@ -14,6 +15,7 @@ ResourceManager::TexturesMap ResourceManager::m_TexturesMap;
 ResourceManager::SpritesMap ResourceManager::m_SpritesMap;
 ResourceManager::AnimatedSpritesMap ResourceManager::m_AnimatedSpritesMap;
 std::string ResourceManager::m_Path;
+std::vector<std::vector<std::string>> ResourceManager::m_levels;
 
 
  void ResourceManager::setExecutablePath(const std::string& executablePath)
@@ -71,22 +73,36 @@ std::shared_ptr<RenderEngine::Texture2D> ResourceManager::loadTexture(const std:
 	int channels = 0;
 	int width = 0;
 	int height = 0;
-	stbi_set_flip_vertically_on_load(true); // нужный порядок байтов
-	unsigned char* pixels/*почему char*/ = stbi_load(std::string/*почему явно преобразовываем в стринег если m_Path и так стринг??*/(m_Path + texturePath).c_str(), &width, &height, &channels, 0);// 0- сколько каналов мы собираемся получить
+
+	// Устанавливаем флаг для переворота изображения по вертикали
+	stbi_set_flip_vertically_on_load(true);
+
+	// Загружаем изображение. stbi_load вернет указатель на данные пикселей
+	unsigned char* pixels = stbi_load(std::string(m_Path + texturePath).c_str(), &width, &height, &channels, 0);
+
+	// Если не удалось загрузить изображение, выводим ошибку и возвращаем nullptr
 	if (!pixels) {
 		std::cerr << "Can`t load image: " << texturePath << std::endl;
 		return nullptr;
 	}
-	std::shared_ptr<RenderEngine::Texture2D>& DefaultTexture = m_TexturesMap.emplace(textureName,std::make_shared<RenderEngine::Texture2D>(width, height, pixels, 
-		                                                                         channels, GL_NEAREST, GL_CLAMP_TO_EDGE)).first->second;
+
+	// Создаем текстуру с загруженными данными и добавляем её в карту
+	std::shared_ptr<RenderEngine::Texture2D>& DefaultTexture = m_TexturesMap.emplace(textureName, std::make_shared<RenderEngine::Texture2D>(width, height,
+																					pixels, channels, GL_NEAREST, GL_CLAMP_TO_EDGE)).first->second;
+
+	// Если текстура не была создана, выводим ошибку
 	if (!DefaultTexture) {
 		std::cerr << "Problem with shared_ptr! " << DefaultTexture << std::endl;
 		return nullptr;
 	}
 
+	// Освобождаем память, занятую пиксельными данными
 	stbi_image_free(pixels);
+
+	// Возвращаем ссылку на созданную текстуру
 	return DefaultTexture;
-	}
+}
+
 
 std::shared_ptr<RenderEngine::Texture2D> ResourceManager::getTexture(const std::string& textureName)
 {
@@ -101,8 +117,6 @@ std::shared_ptr<RenderEngine::Texture2D> ResourceManager::getTexture(const std::
 std::shared_ptr<RenderEngine::Sprite> ResourceManager::loadSprites(const std::string& spriteName, 
 															   const std::string& textureName,
 															   const std::string& shaderName,
-															   const unsigned int spriteWidth, 
-															   const unsigned int spriteHeight,
 															   std::string&& subTextureName)
 {
 	std::shared_ptr<RenderEngine::Texture2D> pTexture = getTexture(textureName);
@@ -121,17 +135,14 @@ std::shared_ptr<RenderEngine::Sprite> ResourceManager::loadSprites(const std::st
 	std::shared_ptr<RenderEngine::Sprite>& DefaultSprite = m_SpritesMap.emplace(spriteName, 
 																	        std::make_shared<RenderEngine::Sprite>(pTexture, 
 																			std::move(subTextureName),
-																			pShader,																			
-																			glm::vec2(0.f, 0.f),
-																		    glm::vec2(spriteWidth, spriteHeight))).first->second; 
+																			pShader																		
+																			)).first->second; 
 	return DefaultSprite; 
 }
 
 std::shared_ptr<RenderEngine::AnimatedSprite> ResourceManager::loadAnimatedSprites(const std::string& spriteName, 
 														 				       const std::string& textureName, 
 																			   const std::string& shaderName, 
-																			   const unsigned int spriteWidth, 
-																			   const unsigned int spriteHeight, 
 																			   std::string&& subTextureName)
 {
 	std::shared_ptr<RenderEngine::Texture2D> pTexture = getTexture(textureName);
@@ -150,9 +161,8 @@ std::shared_ptr<RenderEngine::AnimatedSprite> ResourceManager::loadAnimatedSprit
 	std::shared_ptr<RenderEngine::AnimatedSprite>& DefaultSprite = m_AnimatedSpritesMap.emplace(spriteName,
 		std::make_shared<RenderEngine::AnimatedSprite>(pTexture,
 			std::move(subTextureName),
-			pShader,
-			glm::vec2(0.f, 0.f),
-			glm::vec2(spriteWidth, spriteHeight))).first->second;
+			pShader
+			)).first->second;
 	return DefaultSprite;
 }
 
@@ -261,6 +271,15 @@ bool ResourceManager::loadJSONResources(const std::string&& JSONPath)
 		}
 	}
 
+	auto spritesIt = document.FindMember("sprites");
+	if (spritesIt != document.MemberEnd()) {
+		for (const auto& currentSprite : spritesIt->value.GetArray())
+		{
+			loadSprites(currentSprite["name"].GetString(), currentSprite["textureAtlas"].GetString(),
+						currentSprite["shader"].GetString(), currentSprite["subTextureName"].GetString());
+		}
+	}
+
 	auto animatedSpritesIt = document.FindMember("animatedSprites");
 	if (animatedSpritesIt != document.MemberEnd())
 	{
@@ -269,11 +288,9 @@ bool ResourceManager::loadJSONResources(const std::string&& JSONPath)
 			const std::string name = currentAnimatedSprite["name"].GetString();
 			const std::string textureAtlas = currentAnimatedSprite["textureAtlas"].GetString();
 			const std::string shader = currentAnimatedSprite["shader"].GetString();
-			const unsigned int width = currentAnimatedSprite["initialWidth"].GetUint();
-			const unsigned int height = currentAnimatedSprite["initialHeight"].GetUint();
 			std::string initialSubTexture = currentAnimatedSprite["initialSubTexture"].GetString();
 
-			auto pAnimatedSprite = loadAnimatedSprites(name, textureAtlas, shader, width, height, std::move(initialSubTexture));
+			auto pAnimatedSprite = loadAnimatedSprites(name, textureAtlas, shader, std::move(initialSubTexture));
 			if (!pAnimatedSprite) {
 				
 				std::cerr << "Can`t load an animated sprite" << name << std::endl;
@@ -295,6 +312,21 @@ bool ResourceManager::loadJSONResources(const std::string&& JSONPath)
 		}
 		
 	}
+
+	auto levelIt = document.FindMember("levels");
+	if (levelIt != document.MemberEnd()) {
+		for (const auto& currentLevel : levelIt->value.GetArray()) {
+			
+			std::vector<std::string> description;
+			for (const auto& currentDescription : currentLevel["description"].GetArray())
+			{
+				description.emplace_back(currentDescription.GetString());
+			}
+			m_levels.emplace_back(std::move(description));
+			
+		}
+	}
+
 	return true;
 }
 

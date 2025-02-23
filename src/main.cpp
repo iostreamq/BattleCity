@@ -12,13 +12,13 @@
 #include "Renderer/Renderer.h"
 
 
-glm::ivec2 g_windowSize(640, 480);
+glm::ivec2 g_windowSize(13*16, 14*16);
 Game g_game(g_windowSize);
 
 void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height) {
 
     g_windowSize.x = width;
-    g_windowSize.y = height;
+    g_windowSize.y = height; 
     RenderEngine::Renderer::setViewport(0, 0, width, height); // показывает откуда и куда мы рисуем(0,0 это левый нижниый угол) 
 }
 

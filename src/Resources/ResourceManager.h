@@ -25,9 +25,7 @@ public:
 	static std::shared_ptr<RenderEngine::Texture2D> getTexture(const std::string& textureName);
 	static std::shared_ptr<RenderEngine::Sprite> loadSprites(const std::string& spriteName,
 														 const std::string& textureName,
-														 const std::string& shaderName,
-													     const unsigned int spriteWidth, 
-														 const unsigned int spriteHeight,
+														 const std::string& shaderName,												     
 														 std::string&& subTextureName = "DEFAULT");
 
 	static std::shared_ptr<RenderEngine::Sprite> getSprite(std::string&& spriteName);
@@ -35,8 +33,6 @@ public:
 	static std::shared_ptr<RenderEngine::AnimatedSprite> loadAnimatedSprites(const std::string& spriteName,
 																	     const std::string& textureName,
 																	     const std::string& shaderName,
-																	     const unsigned int spriteWidth,
-																	     const unsigned int spriteHeight,
 																	     std::string&& subTextureName = "DEFAULT");
 
 	static std::shared_ptr<RenderEngine::AnimatedSprite> getAnimatedSprite(std::string&& spriteName);
@@ -48,6 +44,7 @@ public:
 															     const unsigned int subTextureHeight);
 
 	static bool loadJSONResources(const std::string&& JSONPath);
+	static const std::vector<std::vector<std::string>>& getLevels() { return m_levels; }
 
 private:
 	static std::string getFileString(const std::string& AdditionalPath); //////////почему статик
@@ -60,4 +57,5 @@ private:
 	static TexturesMap m_TexturesMap;
 	static SpritesMap m_SpritesMap;
 	static AnimatedSpritesMap m_AnimatedSpritesMap;
+	static std::vector<std::vector<std::string>> m_levels;
 };
