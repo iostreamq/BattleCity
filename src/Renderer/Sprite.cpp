@@ -67,8 +67,22 @@ namespace RenderEngine {
 
 
 
-	void Sprite::Render(const glm::vec2& position, const glm::vec2& size, const float rotation) const
+	void Sprite::Render(const glm::vec2& position, const glm::vec2& size, const float rotation, const size_t frameId) const
 	{
+		if(!m_framesDescription.empty())
+		{
+			const FramesDescription& currentFrameDescription = m_framesDescription[frameId];
+
+			const GLfloat textureCoords[] = {
+			 currentFrameDescription.leftBottomUV.x, currentFrameDescription.leftBottomUV.y,
+			 currentFrameDescription.leftBottomUV.x,  currentFrameDescription.rightTopUV.y,
+			 currentFrameDescription.rightTopUV.x, currentFrameDescription.rightTopUV.y,
+			 currentFrameDescription.rightTopUV.x, currentFrameDescription.leftBottomUV.y,
+			}; // чтоб не мучаться делай 2 буфера. если бы мы не меняли корды текстур то все было бы в одном буфере(sprite.cpp)
+
+			m_textureCoordsBuffer.update(&textureCoords, 2 * 4 * sizeof(GLfloat)); // передает определенные данные которые обновляют тек буфер
+		}
+
 		m_pShaderProgram->use();
 
 		glm::mat4 model(1.f);
@@ -85,5 +99,18 @@ namespace RenderEngine {
 		m_pTexture->bind();
 
 		Renderer::draw(m_vertexArray, m_IndexBuffer, *m_pShaderProgram);
+	}
+
+	void Sprite::insertFrames(std::vector<FramesDescription> framesDescriptions)
+	{
+		m_framesDescription = std::move(framesDescriptions);
+	}
+	uint64_t Sprite::GetFrameDuration(const size_t frameId) const
+	{
+		return m_framesDescription[frameId].duration;
+	}
+	size_t Sprite::GetFramesCount()
+	{
+		return m_framesDescription.size();
 	}
 }

@@ -10,7 +10,7 @@ namespace RenderEngine {
 		static void draw(const VertexArray& vertexArray, const indexBuffer& indBufffer, const ShaderProgram& shaderProgram);
 		static void setCleatColor(float r, float g, float b, float a);
 		static void clear();
-		static void setViewport(unsigned int leftOffset, unsigned int rightOffset, unsigned int width, int height);
+		static void setViewport(unsigned int leftOffset, unsigned int BottomOffset, unsigned int width, int height);
 		const static std::string getRendererStr();
 		const static std::string getVersionStr();
 	};

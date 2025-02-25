@@ -5,7 +5,6 @@
 #include "../Renderer/ShaderProgram.h" 
 #include "../Renderer/Texture2D.h" 
 #include "../Renderer/Sprite.h"
-#include "../Renderer/AnimatedSprite.h"
 #include <vector>
 class ResourceManager {
 
@@ -30,12 +29,7 @@ public:
 
 	static std::shared_ptr<RenderEngine::Sprite> getSprite(std::string&& spriteName);
 
-	static std::shared_ptr<RenderEngine::AnimatedSprite> loadAnimatedSprites(const std::string& spriteName,
-																	     const std::string& textureName,
-																	     const std::string& shaderName,
-																	     std::string&& subTextureName = "DEFAULT");
-
-	static std::shared_ptr<RenderEngine::AnimatedSprite> getAnimatedSprite(std::string&& spriteName);
+	
 
 	static std::shared_ptr<RenderEngine::Texture2D> loadTextureAtlas(std::string&& textureName,
 															     std::string&& texturePath,
@@ -52,10 +46,8 @@ private:
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::ShaderProgram>> ShaderProgramsMap; // как будто юзлес нахуй она вообще только если статик делать или только для имени 
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::Texture2D>> TexturesMap;
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::Sprite>> SpritesMap;
-	typedef std::map<const std::string, std::shared_ptr<RenderEngine::AnimatedSprite>> AnimatedSpritesMap;
 	static ShaderProgramsMap m_shaderPrograms;
 	static TexturesMap m_TexturesMap;
 	static SpritesMap m_SpritesMap;
-	static AnimatedSpritesMap m_AnimatedSpritesMap;
 	static std::vector<std::vector<std::string>> m_levels;
 };

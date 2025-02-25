@@ -18,8 +18,26 @@ Game g_game(g_windowSize);
 void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height) {
 
     g_windowSize.x = width;
-    g_windowSize.y = height; 
-    RenderEngine::Renderer::setViewport(0, 0, width, height); // показывает откуда и куда мы рисуем(0,0 это левый нижниый угол) 
+    g_windowSize.y = height;
+
+    const float map_aspect_ratio = 13.f / 14.f;
+    unsigned int viewPortWidth = width;
+    unsigned int viewPortHeight = height; 
+    unsigned int viewPortLeftOffset = 0;
+    unsigned int viewPortBottomOffset = 0;
+
+    if (static_cast<float>(g_windowSize.x / g_windowSize.y) > map_aspect_ratio) // делаем ширину под высоту 
+    {
+        viewPortWidth = g_windowSize.y * map_aspect_ratio;
+        viewPortLeftOffset = (g_windowSize.x - viewPortWidth) / 2;
+    }
+    else
+    {
+        viewPortHeight = g_windowSize.x / map_aspect_ratio;
+        viewPortLeftOffset = (g_windowSize.y - viewPortHeight) / 2;
+    }
+
+    RenderEngine::Renderer::setViewport(viewPortLeftOffset, viewPortBottomOffset, viewPortWidth, viewPortHeight); // показывает откуда и куда мы рисуем(0,0 это левый нижниый угол) 
 }
 
 void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action/*какой ивент произошел например press*/, int mode) {
