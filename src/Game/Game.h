@@ -19,7 +19,7 @@ public:
 	
 private:
 	std::array<bool, 349> m_keys;
-	enum class EGameState {
+	enum class EGameState : uint8_t {
 		Active,
 		Pause
 	};

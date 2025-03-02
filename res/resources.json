@@ -13,30 +13,33 @@
             "subTextureWidth": 8,
             "subTextureHeight": 8,
             "subTexture": [
-                "brickWall_All",
-                "brickWall_TopLeft",
-                "brickWall_TopRight",
-                "brickWall_Top",
-                "brickWall_BottomLeft",
-                "brickWall_Left",
-                "brickWall_TopRight_BottomLeft",
-                "brickWall_Top_BottomLeft",
-                "brickWall_BottomRight",
-                "brickWall_TopLeft_BottomRight",
-                "brickWall_Right",
-                "brickWall_Top_BottomRight",
-                "brickWall_Bottom",
-                "brickWall_TopLeft_Bottom",
-                "brickWall_TopRight_Bottom",
-                "water1",
-                "water2",
-                "water3",
-                "betonWall",
-                "wall",
-                "ice",
+				"brickWall_All",
+				"brickWall_TopLeft",
+				"brickWall_TopRight",
+				"brickWall_Top",
+				"brickWall_BottomLeft",
+				"brickWall_Left",
+				
+				"brickWall_TopRight_BottomLeft",
+				"brickWall_Top_BottomLeft",
+				"brickWall_BottomRight",
+				"brickWall_TopLeft_BottomRight",
+				"brickWall_Right",
+				"brickWall_Top_BottomRight",
+				
+				"brickWall_Bottom",
+				"brickWall_TopLeft_Bottom",
+				"brickWall_TopRight_Bottom",
+				"water1",
+				"water2",
+				"water3",
+				
+				"betonWall",
 				"trees",
-                "bullet",
-                "nothing"
+				"ice",
+				"wall",
+				"bullet",
+				"nothing"
             ]
         },
         {
@@ -236,6 +239,18 @@
             "textureAtlas": "mapTextureAtlas_8x8",
             "shader": "SpriteShaderProgram",
             "subTextureName": "bullet"
+        },
+		  {
+            "name": "eagle",
+            "textureAtlas": "mapTextureAtlas_16x16",
+            "shader": "SpriteShaderProgram",
+            "subTextureName": "eagle"
+        },
+		  {
+            "name": "eagle_dead",
+            "textureAtlas": "mapTextureAtlas_16x16",
+            "shader": "SpriteShaderProgram",
+            "subTextureName": "eagle_dead"
         },
         {
             "name": "respawn",
@@ -483,6 +498,25 @@
                 "D4D4DH1GD4D4D",
                 "DDDDD0E2DDDDD"
             ]
-        }
+        },
+		
+		{	
+			"description" : [
+				"DDDDDDDDDDDDD",
+				"D00D11D22D33D",
+				"D0DD1DD2DD3DD",
+				"DDDDDDDDDDDDD",
+				"D44D55D66D77D",
+				"D4DD5DD6DD7DD",
+				"DDDDDDDDDDDDD",
+				"D88D99DAADBBD",
+				"D8DD9DDADDBDD",
+				"DDDDDDDDDDDDD",
+				"DCCDGGDHHDIID",
+				"DCDDGDDHDDDDD",
+				"DDDDDH1GDDJJD",
+				"DDDDD0E2DDDDD"
+			]
+		}
     ]
 }

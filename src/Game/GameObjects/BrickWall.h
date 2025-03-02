@@ -10,7 +10,7 @@ namespace RenderEngine {
 class BrickWall : public IGameObject {
 public:
 
-    enum class EBrickWallType {
+    enum class EBrickWallType : uint8_t {
         All,
         Top,
         Bottom,
@@ -22,7 +22,7 @@ public:
         BottomRight
     };
 
-    enum class EBrickState {
+    enum class EBrickState : uint8_t {
         All,
 		TopLeft,
 		TopRight,
@@ -41,16 +41,16 @@ public:
         Destroyed
     };
 
-    enum EBrickLocation {
+    enum EBrickLocation : uint8_t {
         TopLeft,
         TopRight,
         BottomLeft,
         BottomRight
     };
-    BrickWall(const EBrickWallType& eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation);
-     void Render() const override; // убрал виртуал........................................................
-     void update(const uint64_t delta) override;
-
+     BrickWall(const EBrickWallType& eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation);
+     void Render() const override; 
+     void update(const uint64_t& delta) override;
+     
 private:
     std::array<glm::vec2, 4> m_blockOffsets;
     void RenderBrick(const EBrickLocation& eBrickLocation) const;

@@ -11,7 +11,7 @@ namespace RenderEngine {
     class Tank : public IGameObject {
     public:
 
-        enum class EOrientation {
+        enum class EOrientation : uint8_t {
             Top,
             Bottom,
             Left,
@@ -25,7 +25,7 @@ namespace RenderEngine {
         void Render() const override;
         void setOrientation(const EOrientation eOrientation);
         void move(const bool move);
-        void update(const uint64_t delta) override;
+        void update(const uint64_t& delta) override;
 
     private:
         EOrientation m_eOrientation;

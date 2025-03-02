@@ -76,6 +76,6 @@ void BetonWall::Render() const
 		RenderBlock(EBlockLocation::BottomRight);
 }
 
-void BetonWall::update(const uint64_t delta)
+void BetonWall::update(const uint64_t& delta)
 {
 }

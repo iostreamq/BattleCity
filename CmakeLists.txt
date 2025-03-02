@@ -13,8 +13,9 @@ src/Renderer/VertexBuffer.cpp
 src/Renderer/indexBuffer.cpp
 src/Renderer/VertexArray.cpp
 src/Renderer/VertexBufferLayout.cpp
+src/Renderer/SpriteAnimator.cpp
 src/Renderer/Renderer.cpp
-src/Renderer/SpriteAnimator.h
+
 
 src/Game/Game.cpp
 src/Game/Levels.cpp
@@ -22,6 +23,10 @@ src/Game/GameObjects/Tank.cpp
 src/Game/GameObjects/BrickWall.cpp
 src/Game/GameObjects/BetonWall.cpp
 src/Game/GameObjects/IGameObjects.cpp
+src/Game/GameObjects/Trees.cpp
+src/Game/GameObjects/Ice.cpp
+src/Game/GameObjects/Water.cpp
+src/Game/GameObjects/Eagle.cpp
 
 src/Resources/ResourceManager.h
 src/Renderer/ShaderProgram.h
@@ -33,6 +38,7 @@ src/Renderer/indexBuffer.h
 src/Renderer/VertexArray.h
 src/Renderer/VertexBufferLayout.h
 src/Renderer/Renderer.h
+src/Renderer/SpriteAnimator.h
 
 src/Game/Game.h
 src/Game/Levels.h
@@ -40,7 +46,10 @@ src/Game/GameObjects/Tank.h
 src/Game/GameObjects/BrickWall.h
 src/Game/GameObjects/BetonWall.h
 src/Game/GameObjects/IGameObjects.h
-src/Renderer/SpriteAnimator.cpp
+src/Game/GameObjects/Trees.h
+src/Game/GameObjects/Ice.h
+src/Game/GameObjects/Water.h
+src/Game/GameObjects/Eagle.h
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

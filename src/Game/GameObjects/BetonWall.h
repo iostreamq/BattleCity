@@ -10,7 +10,7 @@ namespace RenderEngine {
 class BetonWall : public IGameObject {
 public:
 
-    enum class EBetonWallType {
+    enum class EBetonWallType : uint8_t {
         All,
         Top,
         Bottom,
@@ -22,12 +22,12 @@ public:
         BottomRight
     };
 
-    enum class EBlockState {
+    enum class EBlockState : uint8_t {
      Enabled,
      Destroyed
     };
 
-    enum EBlockLocation {
+    enum EBlockLocation : uint8_t {
         TopLeft,
         TopRight,
         BottomLeft,
@@ -35,7 +35,7 @@ public:
     };
     BetonWall(const EBetonWallType& eBetonWallType, const glm::vec2& position, const glm::vec2& size, const float rotation);
      void Render() const override; // убрал виртуал........................................................
-     void update(const uint64_t delta) override;
+     void update(const uint64_t& delta) override;
 
 private:
     void RenderBlock(const EBlockLocation& eBlockLocation) const;

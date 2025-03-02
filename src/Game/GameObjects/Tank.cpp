@@ -76,7 +76,7 @@ void Tank::move(const bool move)
     m_move = move;
 }
 
-void Tank::update(const uint64_t delta)
+void Tank::update(const uint64_t& delta)
 {
     if (m_move)
     {
