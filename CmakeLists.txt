@@ -20,6 +20,7 @@ src/Game/Game.cpp
 src/Game/Levels.cpp
 src/Game/GameObjects/Tank.cpp
 src/Game/GameObjects/BrickWall.cpp
+src/Game/GameObjects/BetonWall.cpp
 src/Game/GameObjects/IGameObjects.cpp
 
 src/Resources/ResourceManager.h
@@ -37,6 +38,7 @@ src/Game/Game.h
 src/Game/Levels.h
 src/Game/GameObjects/Tank.h
 src/Game/GameObjects/BrickWall.h
+src/Game/GameObjects/BetonWall.h
 src/Game/GameObjects/IGameObjects.h
 src/Renderer/SpriteAnimator.cpp
 )

@@ -243,8 +243,6 @@ bool ResourceManager::loadJSONResources(const std::string&& JSONPath)
 		{ 
 			const auto& pSprite = loadSprites(currentSprite["name"].GetString(), currentSprite["textureAtlas"].GetString(),
 											  currentSprite["shader"].GetString(), currentSprite["subTextureName"].GetString());
-		
-		
 			
 			if (currentSprite.HasMember("frames") && currentSprite["frames"].IsArray())
 			{

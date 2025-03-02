@@ -1,19 +1,16 @@
 #include "Tank.h"
+#include "../../Resources/ResourceManager.h"
 #include "../../Renderer/Sprite.h"
 
-Tank::Tank(std::shared_ptr<RenderEngine::Sprite> pSprite_top,
-    std::shared_ptr<RenderEngine::Sprite> pSprite_bottom,
-    std::shared_ptr<RenderEngine::Sprite> pSprite_left,
-    std::shared_ptr<RenderEngine::Sprite> pSprite_right,
-    const float velocity,
+Tank::Tank(const float velocity,
     const glm::vec2& position,
     const glm::vec2& size)
     : IGameObject(position, size, 0.f)
     , m_eOrientation(EOrientation::Top)
-    , m_pSprite_top(std::move(pSprite_top))
-    , m_pSprite_bottom(std::move(pSprite_bottom))
-    , m_pSprite_left(std::move(pSprite_left))
-    , m_pSprite_right(std::move(pSprite_right))
+    , m_pSprite_top(ResourceManager::getSprite("tankSprite_top"))
+    , m_pSprite_bottom(ResourceManager::getSprite("tankSprite_bottom"))
+    , m_pSprite_left(ResourceManager::getSprite("tankSprite_left"))
+    , m_pSprite_right(ResourceManager::getSprite("tankSprite_right"))
     , m_spriteAnimator_top(m_pSprite_top)
     , m_spriteAnimator_bottom(m_pSprite_bottom)
     , m_spriteAnimator_left(m_pSprite_left)
@@ -21,9 +18,10 @@ Tank::Tank(std::shared_ptr<RenderEngine::Sprite> pSprite_top,
     , m_move(false)
     , m_velocity(velocity)
     , m_moveOffset(glm::vec2(0.f, 1.f))
+  
 {}
 
-void Tank::Render() const
+void Tank::Render() const 
 {
     switch (m_eOrientation)
     {
@@ -31,13 +29,13 @@ void Tank::Render() const
         m_pSprite_top->Render(m_position, m_size, m_rotation, m_spriteAnimator_top.getCurrentFrame());
         break;
     case Tank::EOrientation::Bottom:
-        m_pSprite_bottom->Render(m_position, m_size, m_rotation, m_spriteAnimator_top.getCurrentFrame());
+        m_pSprite_bottom->Render(m_position, m_size, m_rotation, m_spriteAnimator_bottom.getCurrentFrame());
         break;
     case Tank::EOrientation::Left:
-        m_pSprite_left->Render(m_position, m_size, m_rotation, m_spriteAnimator_top.getCurrentFrame());
+        m_pSprite_left->Render(m_position, m_size, m_rotation, m_spriteAnimator_left.getCurrentFrame());
         break;
     case Tank::EOrientation::Right:
-        m_pSprite_right->Render(m_position, m_size, m_rotation, m_spriteAnimator_top.getCurrentFrame());
+        m_pSprite_right->Render(m_position, m_size, m_rotation, m_spriteAnimator_right.getCurrentFrame());
         break;
     }
 }
@@ -86,16 +84,40 @@ void Tank::update(const uint64_t delta)
         switch (m_eOrientation)
         {
         case Tank::EOrientation::Top:
+            if(m_eOrientation == m_LastEOrientation)
             m_spriteAnimator_top.update(delta);
+            else {
+                m_spriteAnimator_top.ResetFrame();
+                m_LastEOrientation = m_eOrientation;
+                m_spriteAnimator_top.update(delta);
+            }
             break;
         case Tank::EOrientation::Bottom:
-            m_spriteAnimator_bottom.update(delta);
+            if (m_eOrientation == m_LastEOrientation)
+                m_spriteAnimator_bottom.update(delta);
+            else {
+                m_spriteAnimator_bottom.ResetFrame();
+                m_LastEOrientation = m_eOrientation;
+                m_spriteAnimator_bottom.update(delta);
+            }
             break;
         case Tank::EOrientation::Left:
-            m_spriteAnimator_left.update(delta);
+            if (m_eOrientation == m_LastEOrientation)
+                m_spriteAnimator_left.update(delta);
+            else {
+                m_spriteAnimator_left.ResetFrame();
+                m_LastEOrientation = m_eOrientation;
+                m_spriteAnimator_left.update(delta);
+            }
             break;
         case Tank::EOrientation::Right:
-            m_spriteAnimator_right.update(delta);
+            if (m_eOrientation == m_LastEOrientation)
+                m_spriteAnimator_right.update(delta);
+            else {
+                m_spriteAnimator_right.ResetFrame();
+                m_LastEOrientation = m_eOrientation;
+                m_spriteAnimator_right.update(delta);
+            }
             break; 
         }
     }

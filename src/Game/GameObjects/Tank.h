@@ -18,11 +18,7 @@ namespace RenderEngine {
             Right
         };
 
-        Tank(std::shared_ptr<RenderEngine::Sprite> pSprite_top,
-            std::shared_ptr<RenderEngine::Sprite> pSprite_bottom,
-            std::shared_ptr<RenderEngine::Sprite> pSprite_left,
-            std::shared_ptr<RenderEngine::Sprite> pSprite_right,
-            const float velocity,
+        Tank(const float velocity,
             const glm::vec2& position,
             const glm::vec2& size);
 
@@ -33,6 +29,7 @@ namespace RenderEngine {
 
     private:
         EOrientation m_eOrientation;
+        EOrientation m_LastEOrientation;
         std::shared_ptr<RenderEngine::Sprite> m_pSprite_top;
         std::shared_ptr<RenderEngine::Sprite> m_pSprite_bottom;
         std::shared_ptr<RenderEngine::Sprite> m_pSprite_left;

@@ -93,33 +93,14 @@ bool Game::init()
         return false;
     }
   
-   auto pTextureAtas = ResourceManager::getTexture("mapTextureAtlas");
-   if (!pTextureAtas) {
-       std::cerr << "Can`t find atlas" << "mapTextureAtlas" << std::endl;
-       return false;
-   }
-
-   auto pTanksTextureAtas = ResourceManager::getTexture("TanksTextureAtlas");
-   if (!pTanksTextureAtas) {
-       std::cerr << "Can`t find Tank`s atlas" << "TanksTextureAtlas" << std::endl;
-       return false;
-   }
-
-
-
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f, static_cast<float>(m_windowSize.y), -100.f, 100.f); // ортографическая матрица передаем характеристики фрустона // static_cast<float>
 
     pSpriteShaderProgram->use(); 
-    pTextureAtas->bind();////////////////////////////////////////////////////////////////////////
     pSpriteShaderProgram->setInt("tex", 0);
     pSpriteShaderProgram->setMatrix4("projectionMatrix", projectionMatrix);
  
     
-    m_pTank = std::make_unique<Tank>(ResourceManager::getSprite("tankSprite_top")
-                                   , ResourceManager::getSprite("tankSprite_bottom")
-                                   , ResourceManager::getSprite("tankSprite_left")
-                                   , ResourceManager::getSprite("tankSprite_right")
-        , 0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
+    m_pTank = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
     m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
 
     return true;
