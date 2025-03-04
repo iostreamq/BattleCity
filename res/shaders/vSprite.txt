@@ -5,10 +5,11 @@ out vec2 texCoord;
 
 uniform mat4 modelMatrix;
 uniform mat4 projectionMatrix;
+uniform float layer;
 
 void main() {
 
 texCoord = tex_Coord;
-gl_Position = projectionMatrix * modelMatrix* vec4(vertex_position, 0.0, 1.0);
+gl_Position = projectionMatrix * modelMatrix* vec4(vertex_position, layer, 1.0);
 
 }

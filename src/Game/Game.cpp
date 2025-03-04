@@ -92,16 +92,29 @@ bool Game::init()
         std::cerr << "Can`t find ShadeProgram" << "pSpriteShaderProgram" << std::endl;
         return false;
     }
-  
+    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
+    m_windowSize.x = static_cast<int>(m_pLevel->GetLevelWidth());
+    m_windowSize.y = static_cast<int>(m_pLevel->GetLevelHeight());
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f, static_cast<float>(m_windowSize.y), -100.f, 100.f); // ортографическая матрица передаем характеристики фрустона // static_cast<float>
 
     pSpriteShaderProgram->use(); 
     pSpriteShaderProgram->setInt("tex", 0);
+  
     pSpriteShaderProgram->setMatrix4("projectionMatrix", projectionMatrix);
  
     
-    m_pTank = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
-    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[1]);
+    m_pTank = std::make_unique<Tank>(0.0000001f, m_pLevel->GetPlayerRespawn_2(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+   
 
     return true;
+}
+
+size_t Game::GetCurrentLevelWidth() const
+{
+    return m_pLevel->GetLevelWidth();
+}
+
+size_t Game::GetCurrentLevelHeight() const
+{
+    return  m_pLevel->GetLevelHeight();
 }

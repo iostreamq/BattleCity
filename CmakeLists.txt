@@ -27,6 +27,7 @@ src/Game/GameObjects/Trees.cpp
 src/Game/GameObjects/Ice.cpp
 src/Game/GameObjects/Water.cpp
 src/Game/GameObjects/Eagle.cpp
+src/Game/GameObjects/Border.cpp
 
 src/Resources/ResourceManager.h
 src/Renderer/ShaderProgram.h
@@ -50,6 +51,7 @@ src/Game/GameObjects/Trees.h
 src/Game/GameObjects/Ice.h
 src/Game/GameObjects/Water.h
 src/Game/GameObjects/Eagle.h
+src/Game/GameObjects/Border.h
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

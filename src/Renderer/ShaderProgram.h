@@ -20,6 +20,7 @@ namespace RenderEngine{
 		ShaderProgram& operator=(ShaderProgram&&) noexcept;
 		ShaderProgram(ShaderProgram&&) noexcept;
 		void ShaderProgram::unuse() const;
+		void setFloat(const std::string& name, const GLfloat value);
 
 	private:
 		bool createShader(const std::string& source, const GLenum shaderType, GLuint& shaderID); // shaderID перадем m_ID и по референсу записываем значение id... , GLenum?? 

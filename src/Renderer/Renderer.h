@@ -11,7 +11,10 @@ namespace RenderEngine {
 		static void setCleatColor(float r, float g, float b, float a);
 		static void clear();
 		static void setViewport(unsigned int leftOffset, unsigned int BottomOffset, unsigned int width, int height);
+		static void setDepthTest(const bool enable);
+		
 		const static std::string getRendererStr();
 		const static std::string getVersionStr();
+	   
 	};
 }
