@@ -29,6 +29,10 @@ src/Game/GameObjects/Water.cpp
 src/Game/GameObjects/Eagle.cpp
 src/Game/GameObjects/Border.cpp
 
+src/Physics/PhysicsEngine.cpp
+
+src/System/Timer.cpp
+
 src/Resources/ResourceManager.h
 src/Renderer/ShaderProgram.h
 src/Resources/stb_image.h
@@ -40,6 +44,10 @@ src/Renderer/VertexArray.h
 src/Renderer/VertexBufferLayout.h
 src/Renderer/Renderer.h
 src/Renderer/SpriteAnimator.h
+
+src/Physics/PhysicsEngine.h
+
+src/System/Timer.h
 
 src/Game/Game.h
 src/Game/Levels.h

@@ -10,6 +10,7 @@
     #include <thread>
     #include "Game/Game.h"
     #include "Renderer/Renderer.h"
+    #include "Physics/PhysicsEngine.h"
 
 
     glm::ivec2 g_windowSize(13*16, 14*16);
@@ -97,15 +98,18 @@
             auto lastTime = std::chrono::high_resolution_clock::now();
             // только после создания контекста и инициализации openGL
             ResourceManager::setExecutablePath(argv[0]);
+            Physics::PhysicsEngine::init();
             g_game.init();
-            glfwSetWindowSize(pWindow, g_game.GetCurrentLevelWidth(), g_game.GetCurrentLevelHeight());
+
+            glfwSetWindowSize(pWindow,3 * g_game.GetCurrentLevelWidth(), 3 * g_game.GetCurrentLevelHeight());
             /* Loop until the user closes the window */
             while (!glfwWindowShouldClose(pWindow))//если стоит флаг !true(который мы поставили в keyCallback), то выходим из цикла и завершаем работу
             {
                 auto currentTime = std::chrono::high_resolution_clock::now();
-                uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();
+                double duration = std::chrono::duration<double, std::milli>(currentTime - lastTime).count();    
                 lastTime = currentTime;
                 g_game.update(duration);
+                Physics::PhysicsEngine::update(duration);
            
                  /* Render here */
                 RenderEngine::Renderer::clear();

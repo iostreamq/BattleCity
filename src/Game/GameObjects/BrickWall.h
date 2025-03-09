@@ -49,7 +49,7 @@ public:
     };
      BrickWall(const EBrickWallType& eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer);
      void Render() const override; 
-     void update(const uint64_t& delta) override;
+     void update(const double& delta) override;
      
 private:
     std::array<glm::vec2, 4> m_blockOffsets;

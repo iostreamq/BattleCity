@@ -257,7 +257,7 @@ bool ResourceManager::loadJSONResources(const std::string&& JSONPath)
 						const auto pTextureAtlas = getTexture(currentSprite["textureAtlas"].GetString());
 						framesDescriptions.emplace_back(pTextureAtlas->getSubTexture(currentFrame["subTexture"].GetString()).leftBottomUV,
 						pTextureAtlas->getSubTexture(currentFrame["subTexture"].GetString()).rightTopUV,
-						currentFrame["duration"].GetUint64());
+						currentFrame["duration"].GetDouble());
 					}
 					pSprite->insertFrames(std::move(framesDescriptions));
 

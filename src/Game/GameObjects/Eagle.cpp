@@ -19,7 +19,7 @@ void Eagle::Render() const
 	m_pSpritesArray[static_cast<uint8_t>(m_eCurrentState)]->Render(m_position, m_size, m_rotation, m_layer);
 }
 
-void Eagle::update(const uint64_t& delta)
+void Eagle::update(const double& delta)
 {
 	
 }

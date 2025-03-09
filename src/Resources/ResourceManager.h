@@ -41,9 +41,9 @@ public:
 	static const std::vector<std::vector<std::string>>& getLevels() { return m_levels; }
 
 private:
-	static std::string getFileString(const std::string& AdditionalPath); //////////почему статик
+	static std::string getFileString(const std::string& AdditionalPath); 
 	static std::string m_Path;
-	typedef std::map<const std::string, std::shared_ptr<RenderEngine::ShaderProgram>> ShaderProgramsMap; // как будто юзлес нахуй она вообще только если статик делать или только для имени 
+	typedef std::map<const std::string, std::shared_ptr<RenderEngine::ShaderProgram>> ShaderProgramsMap; 
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::Texture2D>> TexturesMap;
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::Sprite>> SpritesMap;
 	static ShaderProgramsMap m_shaderPrograms;

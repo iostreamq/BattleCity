@@ -9,7 +9,7 @@ RenderEngine::SpriteAnimator::SpriteAnimator(std::shared_ptr<Sprite> pSprite)
       m_currentAnimationTime(0) 
 {}
 
-void RenderEngine::SpriteAnimator::update(const uint64_t& delta)
+void RenderEngine::SpriteAnimator::update(const double& delta)
 {
 	{
 			m_currentAnimationTime += delta;
