@@ -34,6 +34,10 @@ namespace Physics
 		static  void addDynamicGameObject(std::shared_ptr<IGameObject> pGameObject);
 		static void setCurrentLevel(std::shared_ptr<Level> pLevel);
 	private:
+		static bool hasIntersections(const glm::vec2& dynamicObjectPosition,
+		const std::vector<Physics::AABB>& dynamicObjectColiders,
+		std::vector<std::shared_ptr<IGameObject>> staticObjectsToCheck);
+
 		static std::unordered_set<std::shared_ptr<IGameObject>> m_dynamicObjects;
 		static std::shared_ptr<Level> m_pCurrentLevel;
 	};

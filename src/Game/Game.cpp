@@ -108,7 +108,7 @@ bool Game::init()
     pSpriteShaderProgram->setInt("tex", 0);  
     pSpriteShaderProgram->setMatrix4("projectionMatrix", projectionMatrix);
  
-    m_pTank = std::make_shared<Tank>(0.05, m_pLevel->GetPlayerRespawn_2(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+    m_pTank = std::make_shared<Tank>(0.05, m_pLevel->GetPlayerRespawn_1() , glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
     Physics::PhysicsEngine::addDynamicGameObject(m_pTank);
     //PhysicsEngine::addDynamicGameObject(m_pLevel);
 

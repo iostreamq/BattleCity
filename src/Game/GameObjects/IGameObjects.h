@@ -14,7 +14,7 @@ public:
     const glm::vec2& getSize() { return m_size; }
     virtual void setVelocity(const double& velocity) { m_velocity = velocity;}
 
-    const std::vector<Physics::AABB>& GetColliders() const { return m_colliders; };
+    const std::vector<Physics::AABB>& getColliders() const { return m_colliders; };
 
 protected:
     glm::vec2 m_position;
