@@ -5,7 +5,7 @@
 
 
 Water::Water(const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
-    : IGameObject(position, size, rotation,layer)
+    : IGameObject(EtypeOfObject::Water,position, size, rotation,layer)
 	, m_pSprite(ResourceManager::getSprite("water"))
 	, m_spriteAnimator(m_pSprite)
 	, m_blockOffsets

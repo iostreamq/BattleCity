@@ -4,19 +4,39 @@
 
 class IGameObject {
 public:
-    IGameObject(const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer);
+
+    enum class EtypeOfObject 
+    {
+        BrickWall,
+        BetonWall,
+        Border,
+        Bullet,
+        Water,
+        Tank,
+        Eagle,
+        Trees,
+        Ice,
+
+        Unknown
+    };
+
+    IGameObject(const EtypeOfObject& type,const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer);
     virtual void Render() const = 0;
     virtual void update(const double& delta) {};
     virtual ~IGameObject();
     glm::vec2& getCurrentPosition() { return m_position; }
     glm::vec2& getCurrentDirection() { return m_direction; }
     double& getCurrentVelocity() { return m_velocity; }
+    float& getCurrentRotation() { return m_rotation; }
     const glm::vec2& getSize() { return m_size; }
     virtual void setVelocity(const double& velocity) { m_velocity = velocity;}
-
+    virtual bool checkColiders(EtypeOfObject typeOfObjectToCheck) { return true; };
+    virtual void onCollision() {};
+    EtypeOfObject getObjectType() const { return m_objectType; }
     const std::vector<Physics::AABB>& getColliders() const { return m_colliders; };
 
 protected:
+    EtypeOfObject m_objectType;
     glm::vec2 m_position;
     glm::vec2 m_size;
     float m_rotation;

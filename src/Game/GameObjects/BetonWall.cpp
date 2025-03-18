@@ -5,7 +5,7 @@
 
 
 BetonWall::BetonWall(const EBetonWallType& eBetonWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
-    : IGameObject(position, size, rotation, layer)
+    : IGameObject(EtypeOfObject::BetonWall,position, size, rotation, layer)
     , m_eCurrentBlockState{ EBlockState::Destroyed
                         ,  EBlockState::Destroyed
                         ,  EBlockState::Destroyed

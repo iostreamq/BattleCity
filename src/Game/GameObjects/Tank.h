@@ -4,6 +4,7 @@
 #include "IGameObjects.h"
 #include "../../Renderer/SpriteAnimator.h"
 #include "../../System/Timer.h"
+#include "Bullet.h"
 
 namespace RenderEngine {
     class Sprite;
@@ -29,6 +30,7 @@ namespace RenderEngine {
         void update(const double& delta) override;
         double GetMaxVelocity() const { return m_maxVelocity;}
         void setVelocity(const double& velocity)  override;
+        void fire();
 
     private:
         EOrientation m_eOrientation;
@@ -37,6 +39,7 @@ namespace RenderEngine {
         std::shared_ptr<RenderEngine::Sprite> m_pSprite_bottom;
         std::shared_ptr<RenderEngine::Sprite> m_pSprite_left;
         std::shared_ptr<RenderEngine::Sprite> m_pSprite_right;
+        std::shared_ptr<Bullet> m_bullet;
         RenderEngine::SpriteAnimator m_spriteAnimator_top;
         RenderEngine::SpriteAnimator m_spriteAnimator_bottom;
         RenderEngine::SpriteAnimator m_spriteAnimator_left;

@@ -18,7 +18,6 @@
 #include "Levels.h"
 
 
-
 Game::Game(const glm::ivec2& windowSize):
     m_CurrentGameState(EGameState::Active),
     m_windowSize(windowSize)
@@ -51,9 +50,11 @@ void Game::update(const double delta)
         m_pLevel->update(delta);
     }
 
+
     if (m_pTank)
     {
-        if (m_keys[GLFW_KEY_W])
+
+       if (m_keys[GLFW_KEY_W])
         {
             m_pTank->setOrientation(Tank::EOrientation::Top);
             m_pTank->setVelocity(m_pTank->GetMaxVelocity());
@@ -75,11 +76,17 @@ void Game::update(const double delta)
             m_pTank->setOrientation(Tank::EOrientation::Bottom);
             m_pTank->setVelocity(m_pTank->GetMaxVelocity());
         }
+
         else
         {
             m_pTank->setVelocity(0.f);
         }
 
+       if (m_keys[GLFW_KEY_SPACE])
+       {
+           m_pTank->fire();
+       }
+    
         m_pTank->update(delta);
     }
 }
@@ -98,7 +105,7 @@ bool Game::init()
         std::cerr << "Can`t find ShadeProgram" << "pSpriteShaderProgram" << std::endl;
         return false;
     }
-    m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
+    m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[1]);
     m_windowSize.x = static_cast<int>(m_pLevel->GetLevelWidth());
     m_windowSize.y = static_cast<int>(m_pLevel->GetLevelHeight());
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f, static_cast<float>(m_windowSize.y), -100.f, 100.f); // ортографическая матрица передаем характеристики фрустона // static_cast<float>
@@ -108,7 +115,7 @@ bool Game::init()
     pSpriteShaderProgram->setInt("tex", 0);  
     pSpriteShaderProgram->setMatrix4("projectionMatrix", projectionMatrix);
  
-    m_pTank = std::make_shared<Tank>(0.05, m_pLevel->GetPlayerRespawn_1() , glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+    m_pTank = std::make_shared<Tank>(0.05, m_pLevel->GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
     Physics::PhysicsEngine::addDynamicGameObject(m_pTank);
     //PhysicsEngine::addDynamicGameObject(m_pLevel);
 

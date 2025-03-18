@@ -174,8 +174,7 @@ std::vector<std::shared_ptr<IGameObject>> Level::getObjectsInArea(const glm::vec
     size_t startY = static_cast<size_t>(std::floor(rightTop_converted.y / BLOCK_SIZE));
     size_t endY = static_cast<size_t>(std::ceil(bottomLeft_converted.y / BLOCK_SIZE));
 
-    std::cout << startX << " " << endX << std::endl;
-    std::cout << startY << " " << endY << std::endl;
+
 
     //для одной строки 2 столбца
     for (size_t currentColumn = startX; currentColumn < endX; ++currentColumn)

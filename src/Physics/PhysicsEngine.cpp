@@ -34,13 +34,26 @@ void Physics::PhysicsEngine::update(const double& delta)
             {
                 currentObject->getCurrentPosition() = glm::vec2(static_cast<unsigned int>(currentObject->getCurrentPosition().x / 4.f + 0.5f) * 4,
                  currentObject->getCurrentPosition().y
-             );
+             ); 
 
             }
             auto newPosition = currentObject->getCurrentPosition() + static_cast<float>(delta * currentObject->getCurrentVelocity()) * currentObject->getCurrentDirection();
-            const auto& vectorOfObjectsToCheck = m_pCurrentLevel->getObjectsInArea(newPosition, currentObject->getSize() + newPosition);
+            const auto vectorOfObjectsToCheck = m_pCurrentLevel->getObjectsInArea(newPosition, currentObject->getSize() + newPosition);
+        
+           //наверно времен логика пока не так много накладных расходов на это все 
 
-            bool hasCollisions = hasIntersections(newPosition, currentObject->getColliders(), vectorOfObjectsToCheck);
+            std::vector<std::shared_ptr<IGameObject>> filteredObjects;
+            filteredObjects.reserve(vectorOfObjectsToCheck.size());
+
+            for (const auto& obj : vectorOfObjectsToCheck) 
+            {
+                if (currentObject->checkColiders(obj->getObjectType()))
+                {
+                    filteredObjects.emplace_back(obj);
+                }
+            }
+
+            bool hasCollisions = hasIntersections(newPosition, currentObject->getColliders(), filteredObjects);
 
             if (!hasCollisions) currentObject->getCurrentPosition() = newPosition;
             
@@ -49,13 +62,16 @@ void Physics::PhysicsEngine::update(const double& delta)
                 if (currentObject->getCurrentDirection().x != 0.f) // right and left
                 {
                     currentObject->getCurrentPosition() = glm::vec2(static_cast<unsigned int>(currentObject->getCurrentPosition().x / 8.f + 0.5f) * 8, currentObject->getCurrentPosition().y);
+                    
                 }
                 else if (currentObject->getCurrentDirection().y != 0.f) // top and bottom
                 {
                     currentObject->getCurrentPosition() = glm::vec2(currentObject->getCurrentPosition().x, static_cast<unsigned int>(currentObject->getCurrentPosition().y / 8.f + 0.5f) * 8);
                 }
-            }
 
+                currentObject->onCollision();
+            }
+            
         }
     }
     // colliderTankrightTop.x < colliderObjectLeftBottom.x 

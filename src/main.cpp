@@ -43,6 +43,11 @@
 
     void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action/*какой ивент произошел например press*/, int mode) {
 
+        if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
+        {
+           g_game.m_canFire = true;
+        }
+
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
             glfwSetWindowShouldClose(pWindow, GL_TRUE);
         }

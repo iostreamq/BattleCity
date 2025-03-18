@@ -5,7 +5,7 @@
 
 
 Trees::Trees(const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
-    : IGameObject(position, size, rotation,layer)
+    : IGameObject(EtypeOfObject::Trees,position, size, rotation,layer)
 	, m_pSprite(ResourceManager::getSprite("trees"))
 	, m_blockOffsets
 	{

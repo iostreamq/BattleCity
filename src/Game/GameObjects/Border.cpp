@@ -4,8 +4,8 @@
 
 
 
-Border::Border(const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
-    : IGameObject(position, size, rotation,layer)
+Border::Border( const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
+    : IGameObject(EtypeOfObject::Border,position, size, rotation,layer)
 	, m_pSprite(ResourceManager::getSprite("border"))
 
 {

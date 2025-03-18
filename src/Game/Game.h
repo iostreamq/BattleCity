@@ -11,7 +11,7 @@ public:
 	Game(const glm::ivec2& windowSize); 
 	~Game();
 
-
+	bool m_canFire = false;
 	void Render();
 	void update(const double delta);
 	void setKey(const int key,const int action);
@@ -30,5 +30,6 @@ private:
 	glm::ivec2 m_windowSize;
 	std::shared_ptr<Tank> m_pTank; 
  	std::shared_ptr<Level> m_pLevel;
+
 
 };
