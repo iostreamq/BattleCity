@@ -105,7 +105,7 @@ bool Game::init()
         std::cerr << "Can`t find ShadeProgram" << "pSpriteShaderProgram" << std::endl;
         return false;
     }
-    m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[1]);
+    m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
     m_windowSize.x = static_cast<int>(m_pLevel->GetLevelWidth());
     m_windowSize.y = static_cast<int>(m_pLevel->GetLevelHeight());
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f, static_cast<float>(m_windowSize.y), -100.f, 100.f); // ортографическая матрица передаем характеристики фрустона // static_cast<float>

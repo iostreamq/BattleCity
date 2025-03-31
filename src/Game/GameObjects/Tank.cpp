@@ -81,11 +81,14 @@ void Tank::Render() const
         {
             m_pSprite_shield->Render(m_position, m_size, m_rotation, m_layer + 0.1f, m_spriteAnimator_shield.getCurrentFrame());
         }
-        if (m_bullet->isActivity())
-        { 
+
+        // все условия прописаны внутри, не оч логично но работает)))
+
+        /*if (m_bullet->isActivity())
+        {*/ 
            m_bullet->Render();
           
-        }
+        /*}*/
     }
 }
 
@@ -167,10 +170,10 @@ void Tank::update(const double& delta)
             m_shieldTimer.update(delta);
             m_spriteAnimator_shield.update(delta);
         }
-        if (!m_bullet->IsTimerLeft())
-        {
+        /*if (!m_bullet->IsTimerLeft())
+        {*/
             m_bullet->update(delta);
-        }
+        /*}*/
 
         if (m_velocity > 0)
         {

@@ -50,6 +50,7 @@ namespace RenderEngine {
 		void insertFrames(std::vector<FramesDescription> framesDescriptions);
 		double GetFrameDuration(const size_t frameId) const;
 		size_t GetFramesCount();
+		double GetTotalDuration() const;
 
 	protected:
 		 std::shared_ptr<RenderEngine::Texture2D> m_pTexture;

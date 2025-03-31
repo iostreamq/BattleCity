@@ -15,6 +15,7 @@ namespace RenderEngine {
 		m_pTexture(std::move(pTexture)), 
 		m_pShaderProgram(std::move(pShaderProgram))		
 	{
+		
 
 		const GLfloat vertexCoords[] = {
 			0.f, 0.f, 
@@ -110,6 +111,21 @@ namespace RenderEngine {
 	{
 		m_framesDescription = std::move(framesDescriptions);
 	}
+
+	double Sprite::GetTotalDuration() const
+	{
+	
+		if (m_framesDescription.empty()) return 0;
+
+		double totalDuration = 0;
+
+		for (size_t currentDurationOfFrame = 0; currentDurationOfFrame < m_framesDescription.size(); currentDurationOfFrame++)
+		{
+			totalDuration += m_framesDescription[currentDurationOfFrame].duration;
+		}
+		return totalDuration;
+	}
+
 	double Sprite::GetFrameDuration(const size_t frameId) const
 	{
 		return m_framesDescription[frameId].duration;

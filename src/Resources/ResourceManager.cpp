@@ -259,7 +259,7 @@ bool ResourceManager::loadJSONResources(const std::string&& JSONPath)
 						pTextureAtlas->getSubTexture(currentFrame["subTexture"].GetString()).rightTopUV,
 						currentFrame["duration"].GetDouble());
 					}
-					pSprite->insertFrames(std::move(framesDescriptions));
+					pSprite->insertFrames(framesDescriptions);
 
 				}
 			}

@@ -1,12 +1,9 @@
 #pragma once
-#include "IGameObjects.h"
+#include "../../Resources/ResourceManager.h"
 #include "../../System/Timer.h"
+#include "../../Renderer/SpriteAnimator.h"
 #include <memory>
 #include <array>
-
-namespace RenderEngine {
-    class Sprite;
-}
 
 class Bullet : public IGameObject {
 public:
@@ -20,7 +17,11 @@ public:
     bool checkColiders(EtypeOfObject typeOfObjectToCheck) override;
     void setDelay(const double& duration);
 private:
+    std::shared_ptr<RenderEngine::Sprite> m_pSprite_explosion;
+    RenderEngine::SpriteAnimator m_SpriteAnimator_explosion;
     Timer m_bulletTimer;
+    Timer m_explosionTimer;
     bool m_isActivityBullet;
+    bool m_isActivityExplosion;
     std::shared_ptr<RenderEngine::Sprite> m_pSprite;
 };
