@@ -84,17 +84,16 @@ void Tank::Render() const
 
         // все условия прописаны внутри, не оч логично но работает)))
 
-        /*if (m_bullet->isActivity())
-        {*/ 
-           m_bullet->Render();
-          
-        /*}*/
+        if (m_bullet->IsTimerLeft() || m_bullet->getActivityOfExplosion())
+        { 
+           m_bullet->Render();     
+        }
     }
 }
 
 void Tank::fire()
 {
-    if (m_bullet->IsTimerLeft())
+    if (!m_bullet->IsTimerLeft() && !m_bullet->getActivityOfExplosion())
     {
         // Устанавливаем положение пули относительно танка только один раз
         m_bullet->getCurrentPosition() = m_position + m_size / 4.f + m_size * m_direction/4.f;

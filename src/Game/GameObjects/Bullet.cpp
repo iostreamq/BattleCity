@@ -12,6 +12,7 @@ Bullet::Bullet(const glm::vec2& position, const glm::vec2& size, const float rot
 	m_bulletTimer.setCallback(
 		[&]()
 		{
+			m_velocity = 0;
 			m_isActivityBullet = false;
 		}
 	);
@@ -29,8 +30,7 @@ Bullet::Bullet(const glm::vec2& position, const glm::vec2& size, const float rot
 
 void Bullet::Render() const
 {	
-
-	if (m_isActivityBullet)
+  	if (m_isActivityBullet)
 		m_pSprite->Render(m_position, m_size, m_rotation, m_layer);
 
 	if (m_isActivityExplosion)
@@ -54,27 +54,33 @@ void Bullet::Render() const
 
 void Bullet::update(const double& delta)
 {
+
+	if (IsTimerLeft())
+	{
+		m_bulletTimer.update(delta);
+	}
+
 	if (m_isActivityExplosion)
 	{
 		m_explosionTimer.update(delta);
 		m_SpriteAnimator_explosion.update(delta);
 	}
 
-	if (!IsTimerLeft())
-	m_bulletTimer.update(delta);
 }
 
-void Bullet::onCollision()
-{
+void Bullet::onCollisionDynamic()
+{ 
+
+	m_bulletTimer.update(10000);
 	setVelocity(0);
 	m_isActivityBullet = false;
 	m_explosionTimer.start(m_SpriteAnimator_explosion.getTotalDuration());
-	m_isActivityExplosion = true;
+	m_isActivityExplosion = true;	
 }
 
 bool Bullet::IsTimerLeft()
 {
-	if (m_bulletTimer.checkCurrentTime() <= 0) return true;
+	if (m_bulletTimer.checkCurrentTime() > 0) return true;
 	else return false;
 }
 

@@ -2,6 +2,7 @@
 #include "IGameObjects.h"
 #include <memory>
 #include <array>
+//#include <src/Physics/PhysicsEngine.h>
 
 namespace RenderEngine {
     class Sprite;
@@ -49,9 +50,12 @@ public:
     };
      BrickWall(const EBrickWallType& eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer);
      void Render() const override; 
-     void update(const double& delta) override;
+     void onCollisionStatic(const std::shared_ptr<IGameObject>& object,const uint8_t& location, const Physics::PhysicsEngine::EDirection& direction) override;
      
 private:
+
+    void getNewSubObject(const EBrickLocation& location,const Physics::PhysicsEngine::EDirection direction);
+    void getNewAABB(const EBrickLocation& location);
     std::array<glm::vec2, 4> m_blockOffsets;
     void RenderBrick(const EBrickLocation& eBrickLocation) const;
     std::array<EBrickState, 4> m_eCurrentBrickState;

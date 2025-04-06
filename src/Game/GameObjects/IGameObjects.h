@@ -31,7 +31,8 @@ public:
     const glm::vec2& getSize() { return m_size; }
     virtual void setVelocity(const double& velocity) { m_velocity = velocity;}
     virtual bool checkColiders(EtypeOfObject typeOfObjectToCheck) { return true; };
-    virtual void onCollision() {};
+    virtual void onCollisionDynamic() {};
+    virtual void onCollisionStatic(const std::shared_ptr<IGameObject>& object, const uint8_t& location, const Physics::PhysicsEngine::EDirection& direction) {};
     EtypeOfObject getObjectType() const { return m_objectType; }
     const std::vector<Physics::AABB>& getColliders() const { return m_colliders; };
 

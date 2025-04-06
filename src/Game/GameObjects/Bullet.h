@@ -12,10 +12,12 @@ public:
     void Render() const override;
     void update(const double& delta) override;
     bool& isActivity() { return m_isActivityBullet; };
-    void onCollision() override;
+    void onCollisionDynamic() override;
     bool IsTimerLeft();
+    bool getActivityOfExplosion() { return m_isActivityExplosion; };
     bool checkColiders(EtypeOfObject typeOfObjectToCheck) override;
     void setDelay(const double& duration);
+   
 private:
     std::shared_ptr<RenderEngine::Sprite> m_pSprite_explosion;
     RenderEngine::SpriteAnimator m_SpriteAnimator_explosion;
