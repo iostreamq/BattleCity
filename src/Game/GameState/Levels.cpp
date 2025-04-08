@@ -1,14 +1,17 @@
 #include "Levels.h"
-#include "GameObjects/BrickWall.h"
-#include "GameObjects/BetonWall.h"
-#include "GameObjects/Trees.h"
-#include "GameObjects/Ice.h"
-#include "GameObjects/Water.h"
-#include "GameObjects/Border.h"
-#include "GameObjects/Eagle.h"
+#include "../GameObjects/Tank.h"
+#include "../GameObjects/BrickWall.h"
+#include "../GameObjects/BetonWall.h"
+#include "../GameObjects/Trees.h"
+#include "../GameObjects/Ice.h"
+#include "../GameObjects/Water.h"
+#include "../GameObjects/Border.h"
+#include "../GameObjects/Eagle.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <GLFW/glfw3.h>
+#include <src/Game/Game.h>
 
 
 
@@ -62,7 +65,9 @@ std::shared_ptr<IGameObject> createGameObjectFromDescription(const char descript
 
 
 Level::Level(const std::vector<std::string>& levelDescription)
+    : GameState(EGameStates::Level)
 {
+   
     if (levelDescription.empty())
     {
         std::cerr << "Empty level description!" << std::endl;
@@ -77,6 +82,9 @@ Level::Level(const std::vector<std::string>& levelDescription)
     m_enemyRespawn_1 = { BLOCK_SIZE, BLOCK_SIZE * m_heightBlocks - BLOCK_SIZE / 2 };
     m_enemyRespawn_2 = { BLOCK_SIZE * ((m_widthBlocks + 1) / 2), BLOCK_SIZE * m_heightBlocks - BLOCK_SIZE / 2 };
     m_enemyRespawn_3 = { BLOCK_SIZE * m_widthBlocks, BLOCK_SIZE * m_heightBlocks - BLOCK_SIZE / 2 };
+
+    m_pTank = std::make_shared<Tank>(0.05, GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+    Physics::PhysicsEngine::addDynamicGameObject(m_pTank);
 
     m_levelObjects.reserve(m_widthBlocks * m_heightBlocks + 4);
     unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (m_heightBlocks - 1) + BLOCK_SIZE / 2.f);  //////////////////////////////////////////////
@@ -128,25 +136,65 @@ Level::Level(const std::vector<std::string>& levelDescription)
 
 void Level::Render() const
 {
-    for (const auto& currentLevelObject : m_levelObjects)
-    {
-        if (currentLevelObject)
+        for (const auto& currentLevelObject : m_levelObjects)
         {
-            currentLevelObject->Render();
+            if (currentLevelObject)
+            {
+                currentLevelObject->Render();
+            }
         }
-    }
+
+        if (m_pTank) m_pTank->Render();
+    
 }
 
 void Level::update(const double delta)
 {
-    for (const auto& currentLevelObject : m_levelObjects)
-    {
-        if (currentLevelObject)
+ 
+        for (const auto& currentLevelObject : m_levelObjects)
         {
-            currentLevelObject->update(delta);
+            if (currentLevelObject)
+            {
+                currentLevelObject->update(delta);
+            }
+        }    
+
+        if (Game::m_keys[GLFW_KEY_W])
+        {
+            m_pTank->setOrientation(Tank::EOrientation::Top);
+            m_pTank->setVelocity(m_pTank->GetMaxVelocity());
+
         }
+        else if (Game::m_keys[GLFW_KEY_A])
+        {
+            m_pTank->setOrientation(Tank::EOrientation::Left);
+            m_pTank->setVelocity(m_pTank->GetMaxVelocity());
+
+        }
+        else if (Game::m_keys[GLFW_KEY_D])
+        {
+            m_pTank->setOrientation(Tank::EOrientation::Right);
+            m_pTank->setVelocity(m_pTank->GetMaxVelocity());
+        }
+        else if (Game::m_keys[GLFW_KEY_S])
+        {
+            m_pTank->setOrientation(Tank::EOrientation::Bottom);
+            m_pTank->setVelocity(m_pTank->GetMaxVelocity());
+        }
+
+        else
+        {
+            m_pTank->setVelocity(0.f);
+        }
+
+        if (Game::m_keys[GLFW_KEY_SPACE])
+        {
+            m_pTank->fire();
+        }
+
+        m_pTank->update(delta);
     }
-}
+
 
 size_t Level::GetLevelWidth() const
 {

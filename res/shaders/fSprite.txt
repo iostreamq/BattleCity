@@ -6,12 +6,12 @@ uniform sampler2D tex;
 
 void main() 
 {
-    frag_color = texture(tex, texCoord);
-    
-    float epsilon = 0.01; 
+    frag_color = texture(tex, texCoord); 
+    float epsilonBlack = 0.01; 
 
-    if (length(frag_color.rgb) < epsilon) 
+    if (length(frag_color.rgb) < epsilonBlack) 
     {
         discard;
     }
+	
 }

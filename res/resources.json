@@ -97,8 +97,9 @@
                 "yellowType1_right1",
                 "yellowType1_right2"
             ]
-        }
+        }		
     ],
+	
     "sprites": [
         {
             "name": "brickWall_All",

@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_set>
 #include <memory>
-#include "../Game/Levels.h"
+#include "../Game/GameState/Levels.h"
 
 class IGameObject;
 

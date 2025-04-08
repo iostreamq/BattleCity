@@ -29,8 +29,11 @@ namespace RenderEngine {
         void setOrientation(const EOrientation eOrientation);
         void update(const double& delta) override;
         double GetMaxVelocity() const { return m_maxVelocity;}
+        glm::vec2& GetPosStartScreen() { return m_positionStartScreen; }
+        bool& GetStartScreen() { return is_StartScreenRunning; }
         void setVelocity(const double& velocity)  override;
         void fire();
+        const unsigned int& getCurrentChoice() const { return m_currentChoice; }
 
     private:
         EOrientation m_eOrientation;
@@ -51,10 +54,14 @@ namespace RenderEngine {
         std::shared_ptr<RenderEngine::Sprite> m_pSprite_shield;
         RenderEngine::SpriteAnimator m_spriteAnimator_shield;
 
+        glm::vec2 m_positionStartScreen;
+
         Timer m_spawnTimer;
         Timer m_shieldTimer;
 
         double m_maxVelocity;
         bool m_isSpawning;
         bool m_hasShield;
+        bool is_StartScreenRunning;
+        unsigned int m_currentChoice;
     };

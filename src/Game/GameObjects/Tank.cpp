@@ -1,6 +1,8 @@
 #include "Tank.h"
 #include "../../Resources/ResourceManager.h"
 #include "../../Renderer/Sprite.h"
+#include "../Game.h"
+#include "GLFW/glfw3.h"
 #include <iostream>
 Tank::Tank(const double maxVelocity,
     const glm::vec2& position,
@@ -24,8 +26,9 @@ Tank::Tank(const double maxVelocity,
     , m_maxVelocity(maxVelocity)
     , m_isSpawning(true)
     , m_hasShield(false)
-
-  
+    , is_StartScreenRunning(true)
+    , m_positionStartScreen(glm::vec2(77, 71.5))
+    , m_currentChoice(1)
 {
     m_spawnTimer.setCallback(
         [&]()
@@ -53,43 +56,50 @@ Tank::Tank(const double maxVelocity,
 
 void Tank::Render() const 
 {
-    
-    if (m_isSpawning)
+    if (is_StartScreenRunning)
     {
-        m_pSprite_respawn->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_respawn.getCurrentFrame());
+        m_pSprite_right->Render(m_positionStartScreen, m_size, m_rotation, m_layer, m_spriteAnimator_right.getCurrentFrame());
     }
-
     else
     {
-        switch (m_eOrientation)
+
+        if (m_isSpawning)
         {
-        case Tank::EOrientation::Top:
-            m_pSprite_top->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_top.getCurrentFrame());
-            break;
-        case Tank::EOrientation::Bottom:
-            m_pSprite_bottom->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_bottom.getCurrentFrame());
-            break;
-        case Tank::EOrientation::Left:
-            m_pSprite_left->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_left.getCurrentFrame());
-            break;
-        case Tank::EOrientation::Right:
-            m_pSprite_right->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_right.getCurrentFrame());
-            break;
+            m_pSprite_respawn->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_respawn.getCurrentFrame());
         }
 
-        if (m_hasShield) 
+        else
         {
-            m_pSprite_shield->Render(m_position, m_size, m_rotation, m_layer + 0.1f, m_spriteAnimator_shield.getCurrentFrame());
-        }
+            switch (m_eOrientation)
+            {
+            case Tank::EOrientation::Top:
+                m_pSprite_top->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_top.getCurrentFrame());
+                break;
+            case Tank::EOrientation::Bottom:
+                m_pSprite_bottom->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_bottom.getCurrentFrame());
+                break;
+            case Tank::EOrientation::Left:
+                m_pSprite_left->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_left.getCurrentFrame());
+                break;
+            case Tank::EOrientation::Right:
+                m_pSprite_right->Render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_right.getCurrentFrame());
+                break;
+            }
 
-        // все условия прописаны внутри, не оч логично но работает)))
+            if (m_hasShield)
+            {
+                m_pSprite_shield->Render(m_position, m_size, m_rotation, m_layer + 0.1f, m_spriteAnimator_shield.getCurrentFrame());
+            }
 
-        if (m_bullet->IsTimerLeft() || m_bullet->getActivityOfExplosion())
-        { 
-           m_bullet->Render();     
+            // все условия прописаны внутри, не оч логично но работает)))
+
+            if (m_bullet->IsTimerLeft() || m_bullet->getActivityOfExplosion())
+            {
+                m_bullet->Render();
+            }
         }
     }
-}
+}   
 
 void Tank::fire()
 {
@@ -155,68 +165,115 @@ void Tank::setOrientation(const EOrientation eOrientation)
 void Tank::update(const double& delta)
 {
  
-
-    if (m_isSpawning)
+    if (is_StartScreenRunning)
     {
-        m_spawnTimer.update(delta);
-        m_spriteAnimator_respawn.update(delta);
-    }
-
-    else 
+       m_spriteAnimator_right.update(delta);
+       if (this)
+       {
+           if (Game::m_CurrentGameState == Game::EGameState::Start)
+           {
+               switch (m_currentChoice)
+               {
+               case 1:
+                   if (Game::m_keys[GLFW_KEY_S])
+                   {
+                       GetPosStartScreen() = glm::vec2(77,59);
+                       m_currentChoice++;
+                       Game::m_keys[GLFW_KEY_S] = false;
+                   }
+                   break;
+               case 2:
+                   if (Game::m_keys[GLFW_KEY_S])
+                   {
+                       GetPosStartScreen() = glm::vec2(77, 48);
+                       m_currentChoice++;
+                       Game::m_keys[GLFW_KEY_S] = false;
+                   }
+                   else if (Game::m_keys[GLFW_KEY_W])
+                   {
+                       GetPosStartScreen() = glm::vec2(77, 71.5);
+                       m_currentChoice--;
+                       Game::m_keys[GLFW_KEY_W] = false;
+                   }
+                   break;
+               case 3:
+                   if (Game::m_keys[GLFW_KEY_W])
+                   {
+                       GetPosStartScreen() = glm::vec2(77, 59);
+                       m_currentChoice--;
+                       Game::m_keys[GLFW_KEY_W] = false;
+                   }
+                   break;
+               }
+           }
+       }
+   }
+   
+    else
     {
-        if (m_hasShield)
+
+        if (m_isSpawning)
         {
-            m_shieldTimer.update(delta);
-            m_spriteAnimator_shield.update(delta);
+            m_spawnTimer.update(delta);
+            m_spriteAnimator_respawn.update(delta);
         }
-        /*if (!m_bullet->IsTimerLeft())
-        {*/
-            m_bullet->update(delta);
-        /*}*/
 
-        if (m_velocity > 0)
+        else
         {
-           
-            switch (m_eOrientation)
+            if (m_hasShield)
             {
-            case Tank::EOrientation::Top:
-                if (m_eOrientation == m_LastEOrientation)
-                    m_spriteAnimator_top.update(delta);
-                else {
-                    m_spriteAnimator_top.ResetFrame();
-                    m_LastEOrientation = m_eOrientation;
-                    m_spriteAnimator_top.update(delta);
-                }
-                break;
-            case Tank::EOrientation::Bottom:
-                if (m_eOrientation == m_LastEOrientation)
-                    m_spriteAnimator_bottom.update(delta);
-                else {
-                    m_spriteAnimator_bottom.ResetFrame();
-                    m_LastEOrientation = m_eOrientation;
-                    m_spriteAnimator_bottom.update(delta);
-                }
-                break;
-            case Tank::EOrientation::Left:
-                if (m_eOrientation == m_LastEOrientation)
-                    m_spriteAnimator_left.update(delta);
-                else {
-                    m_spriteAnimator_left.ResetFrame();
-                    m_LastEOrientation = m_eOrientation;
-                    m_spriteAnimator_left.update(delta);
-                }
-                break;
-            case Tank::EOrientation::Right:
-                if (m_eOrientation == m_LastEOrientation)
-                    m_spriteAnimator_right.update(delta);
-                else {
-                    m_spriteAnimator_right.ResetFrame();
-                    m_LastEOrientation = m_eOrientation;
-                    m_spriteAnimator_right.update(delta);
-                }
-                break;
+                m_shieldTimer.update(delta);
+                m_spriteAnimator_shield.update(delta);
             }
-            
+            /*if (!m_bullet->IsTimerLeft())
+            {*/
+            m_bullet->update(delta);
+            /*}*/
+
+            if (m_velocity > 0)
+            {
+
+                switch (m_eOrientation)
+                {
+                case Tank::EOrientation::Top:
+                    if (m_eOrientation == m_LastEOrientation)
+                        m_spriteAnimator_top.update(delta);
+                    else {
+                        m_spriteAnimator_top.ResetFrame();
+                        m_LastEOrientation = m_eOrientation;
+                        m_spriteAnimator_top.update(delta);
+                    }
+                    break;
+                case Tank::EOrientation::Bottom:
+                    if (m_eOrientation == m_LastEOrientation)
+                        m_spriteAnimator_bottom.update(delta);
+                    else {
+                        m_spriteAnimator_bottom.ResetFrame();
+                        m_LastEOrientation = m_eOrientation;
+                        m_spriteAnimator_bottom.update(delta);
+                    }
+                    break;
+                case Tank::EOrientation::Left:
+                    if (m_eOrientation == m_LastEOrientation)
+                        m_spriteAnimator_left.update(delta);
+                    else {
+                        m_spriteAnimator_left.ResetFrame();
+                        m_LastEOrientation = m_eOrientation;
+                        m_spriteAnimator_left.update(delta);
+                    }
+                    break;
+                case Tank::EOrientation::Right:
+                    if (m_eOrientation == m_LastEOrientation)
+                        m_spriteAnimator_right.update(delta);
+                    else {
+                        m_spriteAnimator_right.ResetFrame();
+                        m_LastEOrientation = m_eOrientation;
+                        m_spriteAnimator_right.update(delta);
+                    }
+                    break;
+                }
+
+            }
         }
     }
 }

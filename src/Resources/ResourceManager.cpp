@@ -7,7 +7,7 @@
 #include "stb_image.h"
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
-#include "../Game/Levels.h"
+#include "../Game/GameState/Levels.h"
 //#include "external/glm/vec2.hpp"
 
 ResourceManager::ShaderProgramsMap ResourceManager::m_shaderPrograms;
@@ -214,6 +214,8 @@ bool ResourceManager::loadJSONResources(const std::string&& JSONPath)
 		}
 	}
 
+
+	loadTexture("BattleCity", "/res/textures/BattleCity.png"); // все для упрощения логики)))
 	auto textureAtlasesIt = document.FindMember("textureAtlases");
 	if (textureAtlasesIt != document.MemberEnd())
 	{

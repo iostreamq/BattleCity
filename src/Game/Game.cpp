@@ -15,11 +15,14 @@
 
 #include "../Game/GameObjects/Tank.h"
 #include "../Physics/PhysicsEngine.h"
-#include "Levels.h"
+#include "GameState/Levels.h"
+#include "GameState/StartScreen.h"
+#include "GameState/GameState.h"
 
+std::array<bool, 349> Game::m_keys;
+Game::EGameState Game::m_CurrentGameState = EGameState::Start;
 
-Game::Game(const glm::ivec2& windowSize):
-    m_CurrentGameState(EGameState::Active),
+Game::Game(const glm::ivec2& windowSize) :
     m_windowSize(windowSize)
 {
 	m_keys.fill(false); // когда игра стартует не одна клавиша не нажата
@@ -32,64 +35,42 @@ Game::~Game()
 
 void Game::Render()
 {
-    if (m_pTank)
+    if (m_CurrentGameState == EGameState::Start)
     {
-        m_pTank->Render();
+        if (m_pStartScreen)
+        {
+            m_pStartScreen->Render();
+        }
     }
 
-    if (m_pLevel)
+    else if (m_pLevel)
     {
-        m_pLevel->Render();
+       m_pLevel->Render();
     }
 }
 
 void Game::update(const double delta)
 {
-    if (m_pLevel)
+   
+    if (m_keys[GLFW_KEY_ENTER] && m_pLevel->GetTank()->getCurrentChoice() == 1)
+    {
+        m_CurrentGameState = EGameState::Level;
+        m_pStartScreen->update(delta);
+    }
+    if (m_CurrentGameState == EGameState::Start)
+    {
+        if (m_pStartScreen)
+        {
+            m_pStartScreen->update(delta);
+        }
+    }
+
+    else if (m_pLevel)
     {
         m_pLevel->update(delta);
     }
-
-
-    if (m_pTank)
-    {
-
-       if (m_keys[GLFW_KEY_W])
-        {
-            m_pTank->setOrientation(Tank::EOrientation::Top);
-            m_pTank->setVelocity(m_pTank->GetMaxVelocity());
-           
-        }
-        else if (m_keys[GLFW_KEY_A])
-        {
-            m_pTank->setOrientation(Tank::EOrientation::Left);
-            m_pTank->setVelocity(m_pTank->GetMaxVelocity());
     
-        }
-        else if (m_keys[GLFW_KEY_D])
-        {
-            m_pTank->setOrientation(Tank::EOrientation::Right);
-            m_pTank->setVelocity(m_pTank->GetMaxVelocity());
-        }
-        else if (m_keys[GLFW_KEY_S])
-        {
-            m_pTank->setOrientation(Tank::EOrientation::Bottom);
-            m_pTank->setVelocity(m_pTank->GetMaxVelocity());
-        }
-
-        else
-        {
-            m_pTank->setVelocity(0.f);
-        }
-
-       if (m_keys[GLFW_KEY_SPACE])
-       {
-           m_pTank->fire();
-       }
-    
-        m_pTank->update(delta);
-    }
-}
+ }
 
 
 void Game::setKey(const int key, const int action)
@@ -100,24 +81,23 @@ void Game::setKey(const int key, const int action)
 bool Game::init()
 {
     ResourceManager::loadJSONResources("/res/resources.json");
-    std::shared_ptr<RenderEngine::ShaderProgram>pSpriteShaderProgram =  ResourceManager::getShaderProgram("SpriteShaderProgram");
+    pSpriteShaderProgram =  ResourceManager::getShaderProgram("SpriteShaderProgram");
     if (!pSpriteShaderProgram) {
         std::cerr << "Can`t find ShadeProgram" << "pSpriteShaderProgram" << std::endl;
         return false;
     }
+    
     m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
+    m_pStartScreen = std::make_shared<StartScreen>(m_pLevel->GetTank());
     m_windowSize.x = static_cast<int>(m_pLevel->GetLevelWidth());
     m_windowSize.y = static_cast<int>(m_pLevel->GetLevelHeight());
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f, static_cast<float>(m_windowSize.y), -100.f, 100.f); // ортографическая матрица передаем характеристики фрустона // static_cast<float>
     Physics::PhysicsEngine::setCurrentLevel(m_pLevel);
-
+    
+   
     pSpriteShaderProgram->use(); 
     pSpriteShaderProgram->setInt("tex", 0);  
     pSpriteShaderProgram->setMatrix4("projectionMatrix", projectionMatrix);
- 
-    m_pTank = std::make_shared<Tank>(0.05, m_pLevel->GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
-    Physics::PhysicsEngine::addDynamicGameObject(m_pTank);
-    //PhysicsEngine::addDynamicGameObject(m_pLevel);
 
     return true;
 }

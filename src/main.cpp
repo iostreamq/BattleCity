@@ -26,16 +26,16 @@
         unsigned int viewPortHeight = height; 
         unsigned int viewPortLeftOffset = 0;
         unsigned int viewPortBottomOffset = 0;
-
+        /*x / y = rat */
         if (static_cast<float>(g_windowSize.x) / g_windowSize.y > map_aspect_ratio) // делаем ширину под высоту 
-        {
-            viewPortWidth = static_cast<unsigned int>(g_windowSize.y * map_aspect_ratio);
+        {          
+            viewPortWidth = static_cast<unsigned int>(g_windowSize.y * map_aspect_ratio);   
             viewPortLeftOffset = (g_windowSize.x - viewPortWidth) / 2;
         }
         else
         {
             viewPortHeight = static_cast<unsigned int>(g_windowSize.x / map_aspect_ratio);
-            viewPortLeftOffset = (g_windowSize.y - viewPortHeight) / 2;
+            viewPortBottomOffset = (g_windowSize.y - viewPortHeight) / 2;
         }
 
         RenderEngine::Renderer::setViewport(viewPortLeftOffset, viewPortBottomOffset, viewPortWidth, viewPortHeight); // показывает откуда и куда мы рисуем(0,0 это левый нижниый угол) 
@@ -106,7 +106,7 @@
             Physics::PhysicsEngine::init();
             g_game.init();
 
-            glfwSetWindowSize(pWindow,3 * g_game.GetCurrentLevelWidth(), 3 * g_game.GetCurrentLevelHeight());
+            glfwSetWindowSize(pWindow,4 * g_game.GetCurrentLevelWidth(), 4 * g_game.GetCurrentLevelHeight());
             /* Loop until the user closes the window */
             while (!glfwWindowShouldClose(pWindow))//если стоит флаг !true(который мы поставили в keyCallback), то выходим из цикла и завершаем работу
             {
